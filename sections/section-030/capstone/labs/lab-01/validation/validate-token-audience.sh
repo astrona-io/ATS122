@@ -41,9 +41,20 @@ sign_blob_as() {
 }
 
 # copy_from_ws POD SRC DST: copies a file from the workstation pod to POD.
-copy_from_ws() { ws cat "$2" | kubectl -n workstation exec -i "deploy/$1" -- sh -c "cat > '$3'"; }
+# The file goes through a local temporary file, not a pipe between two
+# kubectl exec calls: if the receiving side ends early, the pipe fails with
+# SIGPIPE (exit 141) and hides the real error.
+copy_from_ws() {
+  local tmp; tmp="$(mktemp)"
+  ws cat "$2" > "$tmp" && kubectl -n workstation exec -i "deploy/$1" -- sh -c "cat > '$3'" < "$tmp"
+  local rc=$?; rm -f "$tmp"; return $rc
+}
 # copy_to_ws POD SRC DST: copies a file from POD to the workstation pod.
-copy_to_ws() { kubectl -n workstation exec -i "deploy/$1" -- cat "$2" | ws sh -c "cat > '$3'"; }
+copy_to_ws() {
+  local tmp; tmp="$(mktemp)"
+  kubectl -n workstation exec -i "deploy/$1" -- cat "$2" > "$tmp" && ws sh -c "cat > '$3'" < "$tmp"
+  local rc=$?; rm -f "$tmp"; return $rc
+}
 
 # commit_as SA MESSAGE: in /root/inventory-app in the workstation pod, adds
 # MESSAGE as a line of src/app.txt and commits it. SA is "none" (unsigned),
