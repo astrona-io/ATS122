@@ -286,8 +286,13 @@ cosign signing-config create \
   --rekor-config ANY \
   --oidc-provider "url=$ISSUER,api-version=1,start-time=$START,operator=astrona-lab" \
   --out signing_config.json
+# sigstore-python 4.5.1 checks the trust configuration strictly: it needs a
+# commonName on each certificate authority (cosign leaves it out when the
+# Fulcio certificate has none) and a selector on the empty tsaConfig.
 jq -n --slurpfile root trusted_root.json --slurpfile signing signing_config.json \
-  '{mediaType: "application/vnd.dev.sigstore.clienttrustconfig.v0.1+json", trustedRoot: $root[0], signingConfig: $signing[0]}' \
+  '{mediaType: "application/vnd.dev.sigstore.clienttrustconfig.v0.1+json",
+    trustedRoot: ($root[0] | .certificateAuthorities |= map(.subject.commonName //= "fulcio")),
+    signingConfig: ($signing[0] | .tsaConfig.selector //= "ANY")}' \
   > trust_config.json
 printf '%s\n' "$ISSUER" > issuer
 EOS
