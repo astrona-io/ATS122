@@ -1,0 +1,265 @@
+# Course manifest for ATS122 - Developer Tooling: Gitsign & Language Clients (Sigstore).
+#
+# One entry per section under `modules:`. Each section lists, in order: its
+# README, then for each module the landing page (course.md), its parts
+# (course-0N-*.md), and right after the part a lab tests, the lab's
+# question.md reading and the `type: lab` entry. The module's summary page
+# comes last. The section capstone closes the section. Playgrounds are not
+# listed: the landing page's playground marker shows them. solution.md is
+# never listed.
+#
+# Every `path:` is relative to this file.
+
+training:
+  id: ATS122
+  title: "Sigstore: Developer Tooling With Gitsign & Language Clients"
+  maturity: draft
+  description: >
+    Training material covering the Developer Tooling domain of the Sigstore
+    training path: keyless Git commit signing with gitsign, configuring Git
+    and gitsign for a Sigstore instance, verifying who signed a commit,
+    verifying Sigstore bundles from Go with sigstore-go, and signing and
+    verifying from Python with sigstore-python, with an overview of the other
+    language clients. Every environment runs a private Sigstore stack in the
+    cluster, where Kubernetes service accounts are the signing identities.
+    Each module pairs a layered reader with an ungraded hands-on playground and
+    a graded practice lab. Each section closes with an integration capstone.
+    Written for gitsign v0.18.0, sigstore-go v1.3.0 and sigstore-python 4.5.1.
+
+  certification:
+    name: Sigstore
+    code: SIGSTORE
+    provider: Astrona
+    domain: "Developer Tooling: Gitsign & Language Clients"
+    weight: 15
+
+modules:
+
+  - id: module-intro
+    title: "Introduction"
+    description: >
+      Start here. What this course trains you to do, how it is laid out, how
+      to get your machine ready with the astrona command-line tool, how the
+      content is written and checked, who maintains it, and how to report a
+      mistake.
+
+    content:
+      - type: reading
+        title: Introduction
+        path: sections/intro/README.md
+      - type: reading
+        title: "Welcome To The Course"
+        path: sections/intro/course-01-welcome.md
+      - type: reading
+        title: "Get Your Machine Ready"
+        path: sections/intro/course-02-get-your-machine-ready.md
+      - type: reading
+        title: "How This Course Is Made"
+        path: sections/intro/course-03-how-this-course-is-made.md
+
+  - id: module-010
+    title: "Signing Git Commits With Gitsign"
+    description: >
+      How gitsign signs a commit with a short-lived Fulcio certificate and
+      records it in Rekor, how to configure Git and gitsign for a Sigstore
+      instance, and how to verify who signed a commit with gitsign verify.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-010/README.md
+
+      - type: reading
+        title: "Sign And Verify Git Commits With Gitsign"
+        path: sections/section-010/module-01/course.md
+      - type: reading
+        title: "How Gitsign Signs A Commit"
+        path: sections/section-010/module-01/course-01-how-gitsign-signs-a-commit.md
+      - type: reading
+        title: "Configuring Git To Sign With Gitsign"
+        path: sections/section-010/module-01/course-02-configuring-git-for-gitsign.md
+      - type: reading
+        title: Question
+        path: sections/section-010/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Sign Every Commit With Gitsign Lab"
+        path: sections/section-010/module-01/labs/lab-01
+        difficulty: beginner
+        estimated_duration: 20m
+        topic: gitsign
+        task_kind: build
+        tags: [gitsign, git-config, commit-signing, keyless, gitsign-verify, service-account-token]
+        learning_goals:
+          - Configure one repository to sign every commit with gitsign against a private Sigstore instance
+          - Sign commits keylessly with a Kubernetes service account token
+          - Prove the signatures with gitsign verify and the expected identity
+        resources:
+          - name: "gitsign"
+            url: https://github.com/sigstore/gitsign
+          - name: "OIDC usage in Fulcio"
+            url: https://docs.sigstore.dev/certificate_authority/oidc-in-fulcio/
+      - type: reading
+        title: "Verifying Who Signed A Commit"
+        path: sections/section-010/module-01/course-03-verifying-signed-commits.md
+      - type: reading
+        title: Summary
+        path: sections/section-010/module-01/course-04-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-010/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Re-Sign A Release Branch With The Right Identity Capstone"
+        path: sections/section-010/capstone/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 30m
+        topic: commit-verification
+        task_kind: troubleshooting
+        tags: [gitsign-verify, certificate-identity, rebase, commit-signing, git-config, offline-verification]
+        learning_goals:
+          - Find the commits of a branch that are unsigned or signed by the wrong identity
+          - Re-sign every commit of the branch while keeping its messages and files
+          - Prove with gitsign verify that every commit is signed by the expected identity
+        resources:
+          - name: "gitsign"
+            url: https://github.com/sigstore/gitsign
+          - name: "Verifying signatures"
+            url: https://docs.sigstore.dev/cosign/verifying/verify/
+
+  - id: module-020
+    title: "Verifying Signatures From Go"
+    description: >
+      What a Sigstore verifier checks in a bundle, and how to write one in Go
+      with sigstore-go: load a trusted root and a bundle, build a verifier,
+      and require an artifact and a signer identity in the policy.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-020/README.md
+
+      - type: reading
+        title: "Verify Sigstore Bundles From Go"
+        path: sections/section-020/module-01/course.md
+      - type: reading
+        title: "What A Verifier Checks"
+        path: sections/section-020/module-01/course-01-what-a-verifier-checks.md
+      - type: reading
+        title: "Writing A Verifier With sigstore-go"
+        path: sections/section-020/module-01/course-02-writing-a-verifier-with-sigstore-go.md
+      - type: reading
+        title: Question
+        path: sections/section-020/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Make A Go Verifier Check Who Signed Lab"
+        path: sections/section-020/module-01/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: go-client
+        task_kind: troubleshooting
+        tags: [sigstore-go, bundle, trusted-root, certificate-identity, keyless, fulcio]
+        learning_goals:
+          - Require the expected signer identity in a sigstore-go verification policy
+          - Make the program fail when verification fails instead of printing a warning
+          - Prove that the program accepts the right signer and refuses a changed file and another signer
+        resources:
+          - name: "sigstore-go"
+            url: https://docs.sigstore.dev/language_clients/go/
+          - name: "sigstore-go verify package"
+            url: https://pkg.go.dev/github.com/sigstore/sigstore-go/pkg/verify
+          - name: "Sigstore bundle format"
+            url: https://docs.sigstore.dev/about/bundle/
+      - type: reading
+        title: Summary
+        path: sections/section-020/module-01/course-03-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-020/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Gate A Release Folder With sigstore-go Capstone"
+        path: sections/section-020/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 35m
+        topic: go-client
+        task_kind: troubleshooting
+        tags: [sigstore-go, release-gate, bundle, certificate-identity, trusted-root]
+        learning_goals:
+          - Find why a release check lets missing, changed and wrongly signed files through
+          - Make the check report every file and fail the release when any file fails
+          - Prove the check on a bad release folder and a clean one
+        resources:
+          - name: "sigstore-go"
+            url: https://github.com/sigstore/sigstore-go
+          - name: "sigstore-go verify package"
+            url: https://pkg.go.dev/github.com/sigstore/sigstore-go/pkg/verify
+
+  - id: module-030
+    title: "Signing And Verifying From Python"
+    description: >
+      sigstore-python from the command line and from code: identity tokens,
+      the client trust configuration for a private instance, signing to a
+      bundle, verifying with an identity policy, and the other Sigstore
+      language clients.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-030/README.md
+
+      - type: reading
+        title: "Sign And Verify From Python"
+        path: sections/section-030/module-01/course.md
+      - type: reading
+        title: "The sigstore-python Command Line"
+        path: sections/section-030/module-01/course-01-the-sigstore-python-command-line.md
+      - type: reading
+        title: "Signing And Verifying In Python Code"
+        path: sections/section-030/module-01/course-02-signing-and-verifying-in-python-code.md
+      - type: reading
+        title: Question
+        path: sections/section-030/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Sign And Verify A Build Output From Python Lab"
+        path: sections/section-030/module-01/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: python-client
+        task_kind: build
+        tags: [sigstore-python, trust-config, service-account-token, bundle, certificate-identity, cosign-verify-blob]
+        learning_goals:
+          - Sign a file from Python with a service account token and a client trust configuration
+          - Verify a file from Python with an identity policy
+          - Prove that cosign accepts the bundle the Python script wrote
+        resources:
+          - name: "sigstore-python"
+            url: https://docs.sigstore.dev/language_clients/python/
+          - name: "sigstore-python API documentation"
+            url: https://sigstore.github.io/sigstore-python/
+      - type: reading
+        title: "The Other Language Clients"
+        path: sections/section-030/module-01/course-03-other-language-clients.md
+      - type: reading
+        title: Summary
+        path: sections/section-030/module-01/course-04-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-030/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Repair A Python Release Signing Step Capstone"
+        path: sections/section-030/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 35m
+        topic: trust-config
+        task_kind: troubleshooting
+        tags: [sigstore-python, oidc-audience, service-account-token, bundle, cosign-verify-blob, certificate-identity]
+        learning_goals:
+          - Find why a release signing step fails or signs the wrong bytes
+          - Fix the token audience, the signed content and the verification issuer
+          - Prove that cosign and the Python check both accept the signed release
+        resources:
+          - name: "sigstore-python"
+            url: https://github.com/sigstore/sigstore-python
+          - name: "OIDC usage in Fulcio"
+            url: https://docs.sigstore.dev/certificate_authority/oidc-in-fulcio/

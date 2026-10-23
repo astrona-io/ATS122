@@ -1,0 +1,38 @@
+# Values for the sigstore/scaffold Helm chart 0.6.117: a private Sigstore
+# stack (Fulcio, Rekor v1 on Trillian, a CT log). Lab-only.
+#
+# The Fulcio OIDC issuer is added by the bootstrap script, because it depends
+# on this cluster's service account token issuer.
+#
+# Trillian's MySQL 5.7 runs out of memory on newer kind nodes, so this uses the
+# MySQL 8.4 image and probes from the chart's own CI values.
+fulcio:
+  server:
+    ingress:
+      hostname: fulcio.localhost
+
+rekor:
+  server:
+    ingress:
+      hostname: rekor.localhost
+
+trillian:
+  mysql:
+    image:
+      # db_server:v1.7.3 (MySQL 8.4)
+      version: sha256:763dfa45405724b466dbaf980d0410e170019afd8747650b8af878538dcea1e2
+    args: []
+    resources:
+      limits:
+        memory: 1Gi
+      requests:
+        memory: 256Mi
+    livenessProbe:
+      exec:
+        command: [mysqladmin, ping, -h, 127.0.0.1, --silent]
+      initialDelaySeconds: 90
+      timeoutSeconds: 5
+    readinessProbe:
+      exec:
+        command: [mysqladmin, ping, -h, 127.0.0.1, --silent]
+      timeoutSeconds: 5

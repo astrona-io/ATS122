@@ -1,0 +1,24 @@
+# Sign And Verify Git Commits With Gitsign (PLAYGROUND) — Playground environment
+# A clean sandbox: it spins up, runs the preparation script, then stays
+# running for free exploration. No task, no grading, no `astrona submit`.
+# Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-122-playground-010-01"
+  docs:
+    guide: "docs/overview.md"
+
+bootstrap:
+  init:
+    - name: "prepare"
+      description: "Installs Helm 3.22.1, the private Sigstore stack (scaffold chart 0.6.117), the workstation pod and its trust material, Gitea, then the playground's starting state."
+      type: "file"
+      source: "bootstrap/prepare.sh"
+  manifests:
+    - name: "lab-start"
+      description: "The workstation pod and its service accounts (namespace workstation)."
+      type: "file"
+      source: "manifests/lab-start.yaml"
+
+teardown:
+  keepCluster: false

@@ -1,0 +1,56 @@
+# Gate A Release Folder With sigstore-go
+# Astrona graded lab. Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-122-capstone-020"
+  docs:
+    guide: "solution.md"
+    solution: "solution.md"
+    question: "question.md"
+    examQuestion: "question.md"
+    prerequisites: "prerequisites.md"
+
+bootstrap:
+  init:
+    - name: "install-sigstore"
+      description: "Installs Helm 3.22.1, the private Sigstore stack (scaffold chart 0.6.117), the workstation pod and its trust material, go-runner"
+      type: "file"
+      source: "bootstrap/01-install-sigstore.sh"
+    - name: "ats-122-capstone-020-setup"
+      description: "Creates the starting state the task works from"
+      type: "file"
+      source: "bootstrap/02-seed-state.sh"
+  manifests:
+    - name: "lab-start"
+      description: "The workstation pod and its service accounts (namespace workstation)."
+      type: "file"
+      source: "manifests/lab-start.yaml"
+
+testing:
+  init:
+    - name: "wait-for-sigstore"
+      description: "Waits until Fulcio, Rekor and the trust material are ready"
+      type: "file"
+      source: "testing/wait-for-sigstore.sh"
+    - name: "reference-solution"
+      description: "The remediation a correct learner performs; used by `astrona test`"
+      type: "file"
+      source: "solution/apply.sh"
+
+validation:
+  scripts:
+    - name: "validate-builds"
+      description: "The program in /work/verify-release builds"
+      type: "file"
+      source: "validation/validate-builds.sh"
+    - name: "validate-flags-bad-files"
+      description: "The program fails the candidate folder and reports exactly docs.txt, notes.txt and plugin.bin"
+      type: "file"
+      source: "validation/validate-flags-bad-files.sh"
+    - name: "validate-accepts-clean"
+      description: "The program passes the clean folder"
+      type: "file"
+      source: "validation/validate-accepts-clean.sh"
+
+teardown:
+  keepCluster: false

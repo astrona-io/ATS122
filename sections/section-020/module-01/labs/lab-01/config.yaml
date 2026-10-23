@@ -1,0 +1,60 @@
+# Make A Go Verifier Check Who Signed
+# Astrona graded lab. Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-122-lab-020-01"
+  docs:
+    guide: "solution.md"
+    solution: "solution.md"
+    question: "question.md"
+    examQuestion: "question.md"
+    prerequisites: "prerequisites.md"
+
+bootstrap:
+  init:
+    - name: "install-sigstore"
+      description: "Installs Helm 3.22.1, the private Sigstore stack (scaffold chart 0.6.117), the workstation pod and its trust material, go-runner"
+      type: "file"
+      source: "bootstrap/01-install-sigstore.sh"
+    - name: "ats-122-lab-020-01-setup"
+      description: "Creates the starting state the task works from"
+      type: "file"
+      source: "bootstrap/02-seed-state.sh"
+  manifests:
+    - name: "lab-start"
+      description: "The workstation pod and its service accounts (namespace workstation)."
+      type: "file"
+      source: "manifests/lab-start.yaml"
+
+testing:
+  init:
+    - name: "wait-for-sigstore"
+      description: "Waits until Fulcio, Rekor and the trust material are ready"
+      type: "file"
+      source: "testing/wait-for-sigstore.sh"
+    - name: "reference-solution"
+      description: "The remediation a correct learner performs; used by `astrona test`"
+      type: "file"
+      source: "solution/apply.sh"
+
+validation:
+  scripts:
+    - name: "validate-builds"
+      description: "The program in /work/verify-blob builds"
+      type: "file"
+      source: "validation/validate-builds.sh"
+    - name: "validate-accepts-good"
+      description: "The verifier accepts release.txt with its bundle when the expected signer is the developer service account"
+      type: "file"
+      source: "validation/validate-accepts-good.sh"
+    - name: "validate-rejects-wrong-signer"
+      description: "The verifier refuses other.txt, which another service account signed"
+      type: "file"
+      source: "validation/validate-rejects-wrong-signer.sh"
+    - name: "validate-rejects-tampered"
+      description: "The verifier refuses a file that changed after it was signed"
+      type: "file"
+      source: "validation/validate-rejects-tampered.sh"
+
+teardown:
+  keepCluster: false

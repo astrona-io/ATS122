@@ -1,0 +1,171 @@
+# The workstation: client tools for every page, and the service accounts
+# whose tokens Fulcio accepts as identities. Lab-only.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: workstation
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: developer
+  namespace: workstation
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ci-bot
+  namespace: workstation
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: intruder
+  namespace: workstation
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: workstation-setup
+  namespace: workstation
+data:
+  install-tools.sh: |
+    #!/bin/sh
+    # Downloads the pinned Sigstore client tools into /tools (an emptyDir
+    # shared with the main container). Runs once, as an init container.
+    set -eu
+    COSIGN_VERSION=3.1.4
+    REKOR_VERSION=1.5.5
+    GITSIGN_VERSION=0.18.0
+    ARCH="$(uname -m)"
+    case "$ARCH" in x86_64) ARCH=amd64 ;; aarch64|arm64) ARCH=arm64 ;; esac
+    wget -q "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-${ARCH}" -O /tools/cosign
+    wget -q "https://github.com/sigstore/rekor/releases/download/v${REKOR_VERSION}/rekor-cli-linux-${ARCH}" -O /tools/rekor-cli
+    wget -q "https://github.com/sigstore/gitsign/releases/download/v${GITSIGN_VERSION}/gitsign_${GITSIGN_VERSION}_linux_${ARCH}" -O /tools/gitsign
+    chmod 0755 /tools/*
+    ls -l /tools
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workstation
+  namespace: workstation
+  labels:
+    app: workstation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workstation
+  template:
+    metadata:
+      labels:
+        app: workstation
+    spec:
+      serviceAccountName: developer
+      initContainers:
+        - name: install-tools
+          image: alpine:3.22
+          command: ["sh", "/setup/install-tools.sh"]
+          volumeMounts:
+            - name: tools
+              mountPath: /tools
+            - name: setup
+              mountPath: /setup
+      containers:
+        - name: workstation
+          image: alpine:3.22
+          command: ["sh", "-c", "apk add --no-cache curl jq git openssl >/dev/null && while true; do sleep 30; done"]
+          env:
+            - name: PATH
+              value: /tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+            - name: HOME
+              value: /root
+            - name: FULCIO_URL
+              value: http://fulcio-server.fulcio-system.svc
+            - name: REKOR_URL
+              value: http://rekor-server.rekor-system.svc
+            - name: CTLOG_URL
+              value: http://ctlog.ctlog-system.svc/sigstorescaffolding
+            # Trust in the private instance for gitsign: the Fulcio root, the
+            # Rekor key and the CT log key. Lab-only paths.
+            - name: GITSIGN_FULCIO_ROOT
+              value: /trust/fulcio.pem
+            - name: SIGSTORE_REKOR_PUBLIC_KEY
+              value: /trust/rekor.pub
+            - name: SIGSTORE_CT_LOG_PUBLIC_KEY_FILE
+              value: /trust/ctfe.pub
+            # Offline mode: the Rekor proof is stored in the commit itself.
+            - name: GITSIGN_REKOR_MODE
+              value: offline
+          volumeMounts:
+            - name: tools
+              mountPath: /tools
+            - name: setup
+              mountPath: /setup
+            - name: trust
+              mountPath: /trust
+            - name: oidc
+              mountPath: /var/run/sigstore/cosign
+              readOnly: true
+      volumes:
+        - name: tools
+          emptyDir: {}
+        - name: setup
+          configMap:
+            name: workstation-setup
+        - name: trust
+          configMap:
+            name: sigstore-trust
+            optional: true
+        # The service account token, with the audience Fulcio expects. The
+        # kubelet renews it before it expires.
+        - name: oidc
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: oidc-token
+                  audience: sigstore
+                  expirationSeconds: 3600
+---
+# go-runner: Go 1.25 for the sigstore-go programs. The modules come from the
+# Go module proxy (internet needed).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-runner
+  namespace: workstation
+  labels:
+    app: go-runner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-runner
+  template:
+    metadata:
+      labels:
+        app: go-runner
+    spec:
+      serviceAccountName: developer
+      containers:
+        - name: go
+          image: golang:1.25.14-alpine
+          command: ["sh", "-c", "mkdir -p /work && while true; do sleep 30; done"]
+          workingDir: /work
+          env:
+            - name: GOTOOLCHAIN
+              value: local
+          resources:
+            requests:
+              memory: 512Mi
+            limits:
+              memory: 2Gi
+          volumeMounts:
+            - name: trust
+              mountPath: /trust
+      volumes:
+        - name: trust
+          configMap:
+            name: sigstore-trust
+            optional: true
