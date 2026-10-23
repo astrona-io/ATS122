@@ -7,7 +7,6 @@ metadata:
   name: "ats-122-playground-020-01"
   docs:
     guide: "docs/overview.md"
-
 bootstrap:
   init:
     - name: "prepare"
@@ -19,6 +18,10 @@ bootstrap:
       description: "The workstation pod and its service accounts (namespace workstation)."
       type: "file"
       source: "manifests/lab-start.yaml"
-
 teardown:
   keepCluster: false
+runtime:
+  kind:
+    preloadImages:
+      - alpine:3.22
+      - golang:1.25.14-alpine

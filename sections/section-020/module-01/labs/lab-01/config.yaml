@@ -9,7 +9,6 @@ metadata:
     question: "question.md"
     examQuestion: "question.md"
     prerequisites: "prerequisites.md"
-
 bootstrap:
   init:
     - name: "install-sigstore"
@@ -25,7 +24,6 @@ bootstrap:
       description: "The workstation pod and its service accounts (namespace workstation)."
       type: "file"
       source: "manifests/lab-start.yaml"
-
 testing:
   init:
     - name: "wait-for-sigstore"
@@ -36,7 +34,6 @@ testing:
       description: "The remediation a correct learner performs; used by `astrona test`"
       type: "file"
       source: "solution/apply.sh"
-
 validation:
   scripts:
     - name: "validate-builds"
@@ -55,6 +52,10 @@ validation:
       description: "The verifier refuses a file that changed after it was signed"
       type: "file"
       source: "validation/validate-rejects-tampered.sh"
-
 teardown:
   keepCluster: false
+runtime:
+  kind:
+    preloadImages:
+      - alpine:3.22
+      - golang:1.25.14-alpine
