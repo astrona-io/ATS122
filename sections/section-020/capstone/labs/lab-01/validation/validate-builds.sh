@@ -40,19 +40,34 @@ sign_blob_as() {
     --identity-token "$token" --bundle "$2.sigstore.json" "$2" >/dev/null 2>&1
 }
 
+# send_file POD SRC DST: writes the local file SRC to DST in POD. kubectl exec
+# can drop the end of a large stdin, so the sizes are compared and the copy is
+# repeated until the whole file has arrived.
+send_file() {
+  local want got
+  want="$(wc -c < "$2" | tr -d ' ')"
+  for _ in 1 2 3 4 5; do
+    kubectl -n workstation exec -i "deploy/$1" -- sh -c "mkdir -p \"\$(dirname '$3')\" && cat > '$3'" < "$2" &&
+      got="$(kubectl -n workstation exec "deploy/$1" -- sh -c "wc -c < '$3'" | tr -d ' ')" &&
+      [ "$got" = "$want" ] && return 0
+    sleep 1
+  done
+  echo "ERROR: $2 did not arrive whole at $1:$3." >&2
+  return 1
+}
 # copy_from_ws POD SRC DST: copies a file from the workstation pod to POD.
 # The file goes through a local temporary file, not a pipe between two
 # kubectl exec calls: if the receiving side ends early, the pipe fails with
 # SIGPIPE (exit 141) and hides the real error.
 copy_from_ws() {
   local tmp; tmp="$(mktemp)"
-  ws cat "$2" > "$tmp" && kubectl -n workstation exec -i "deploy/$1" -- sh -c "cat > '$3'" < "$tmp"
+  ws cat "$2" > "$tmp" && send_file "$1" "$tmp" "$3"
   local rc=$?; rm -f "$tmp"; return $rc
 }
 # copy_to_ws POD SRC DST: copies a file from POD to the workstation pod.
 copy_to_ws() {
   local tmp; tmp="$(mktemp)"
-  kubectl -n workstation exec -i "deploy/$1" -- cat "$2" > "$tmp" && ws sh -c "cat > '$3'" < "$tmp"
+  kubectl -n workstation exec -i "deploy/$1" -- cat "$2" > "$tmp" && send_file workstation "$tmp" "$3"
   local rc=$?; rm -f "$tmp"; return $rc
 }
 
@@ -123,7 +138,7 @@ record_baseline() {
 baseline() { kubectl -n workstation get configmap lab-baseline -o jsonpath="{.data.$1}"; }
 
 # put_file POD SRC DST: copies a file from this machine into POD.
-put_file() { kubectl -n workstation exec -i "deploy/$1" -- sh -c "mkdir -p \"\$(dirname '$3')\" && cat > '$3'" < "$2"; }
+put_file() { send_file "$@"; }
 
 # build DIR: builds the Go program in DIR inside go-runner.
 build() { gorun sh -c "cd '$1' && go build -o ./prog . 2>&1"; }
