@@ -104,8 +104,10 @@ manifest_dir() {
 # record_baseline KEY VALUE / baseline KEY: values the graders compare against,
 # kept in the ConfigMap lab-baseline in the namespace workstation.
 record_baseline() {
-  kubectl -n workstation create configmap lab-baseline --dry-run=client -o yaml \
-    --from-literal="$1=$2" | kubectl apply -f - >/dev/null 2>&1 || true
+  # Create the ConfigMap only once; applying a one-key ConfigMap would erase
+  # the values recorded before it.
+  kubectl -n workstation get configmap lab-baseline >/dev/null 2>&1 || \
+    kubectl -n workstation create configmap lab-baseline >/dev/null
   kubectl -n workstation patch configmap lab-baseline --type merge \
     -p "{\"data\":{\"$1\":\"$2\"}}" >/dev/null
 }
