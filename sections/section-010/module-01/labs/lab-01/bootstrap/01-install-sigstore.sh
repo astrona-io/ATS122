@@ -213,16 +213,24 @@ ISSUER="$(kubectl get --raw /.well-known/openid-configuration | sed -n 's/.*"iss
 echo "[lab] Service account token issuer: ${ISSUER}"
 
 # Fulcio trusts exactly this issuer, as the "kubernetes" issuer type.
-cat > "$WORK/fulcio-issuer.yaml" <<EOF
-fulcio:
-  config:
-    contents:
-      OIDCIssuers:
-        "${ISSUER}":
-          IssuerURL: "${ISSUER}"
-          ClientID: sigstore
-          Type: kubernetes
-EOF
+# Fulcio v1.9.0 trusts the cluster CA for a kubernetes issuer only when the
+# configuration also lists https://kubernetes.default.svc.
+{
+  echo "fulcio:"
+  echo "  config:"
+  echo "    contents:"
+  echo "      OIDCIssuers:"
+  echo "        \"https://kubernetes.default.svc\":"
+  echo "          IssuerURL: \"https://kubernetes.default.svc\""
+  echo "          ClientID: sigstore"
+  echo "          Type: kubernetes"
+  if [ "$ISSUER" != "https://kubernetes.default.svc" ]; then
+    echo "        \"$ISSUER\":"
+    echo "          IssuerURL: \"$ISSUER\""
+    echo "          ClientID: sigstore"
+    echo "          Type: kubernetes"
+  fi
+} > "$WORK/fulcio-issuer.yaml"
 
 echo "[lab] Installing the private Sigstore stack (scaffold chart ${SCAFFOLD_CHART_VERSION}); this takes several minutes..."
 helm repo add sigstore https://sigstore.github.io/helm-charts >/dev/null 2>&1 || true

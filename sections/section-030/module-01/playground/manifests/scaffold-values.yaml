@@ -8,6 +8,11 @@
 # MySQL 8.4 image and probes from the chart's own CI values.
 fulcio:
   server:
+    # Without a mounted token, Fulcio fetches the cluster's discovery document
+    # and JWKS anonymously. With one, Fulcio v1.9.0 refuses JWKS URLs on a
+    # different host than the issuer, which is the case on kind.
+    serviceAccount:
+      mountToken: false
     ingress:
       hostname: fulcio.localhost
 
