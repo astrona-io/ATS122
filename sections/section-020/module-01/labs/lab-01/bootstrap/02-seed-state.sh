@@ -111,6 +111,7 @@ manifest_dir() {
   done
   echo "manifests"
 }
+MANIFEST_DIR="$(manifest_dir)"
 
 # record_baseline KEY VALUE / baseline KEY: values the graders compare against,
 # kept in the ConfigMap lab-baseline in the namespace workstation.
