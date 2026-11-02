@@ -30,8 +30,6 @@ training:
     name: Sigstore
     code: SIGSTORE
     provider: Astrona
-    domain: "Developer Tooling: Gitsign & Language Clients"
-    weight: 15
 
 modules:
 
