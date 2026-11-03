@@ -1,0 +1,61 @@
+# Make The Release Check Accept Two Signers
+# Astrona graded lab. Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-122-lab-030-02"
+  docs:
+    guide: "solution.md"
+    solution: "solution.md"
+    question: "question.md"
+    examQuestion: "question.md"
+    prerequisites: "prerequisites.md"
+bootstrap:
+  init:
+    - name: "install-sigstore"
+      description: "Installs Helm 3.22.1, the private Sigstore stack (scaffold chart 0.6.117), the workstation pod and its trust material, py-runner"
+      type: "file"
+      source: "bootstrap/01-install-sigstore.sh"
+    - name: "ats-122-lab-030-02-setup"
+      description: "Creates the starting state the task works from"
+      type: "file"
+      source: "bootstrap/02-seed-state.sh"
+  manifests:
+    - name: "lab-start"
+      description: "The workstation pod and its service accounts (namespace workstation)."
+      type: "file"
+      source: "manifests/lab-start.yaml"
+testing:
+  init:
+    - name: "wait-for-sigstore"
+      description: "Waits until Fulcio, Rekor and the trust material are ready"
+      type: "file"
+      source: "testing/wait-for-sigstore.sh"
+    - name: "reference-solution"
+      description: "The remediation a correct learner performs; used by `astrona test`"
+      type: "file"
+      source: "solution/apply.sh"
+validation:
+  scripts:
+    - name: "validate-accepts-two-signers"
+      description: "/work/check_release.py exits 0 for a folder signed by ci-bot and developer"
+      type: "file"
+      source: "validation/validate-accepts-two-signers.sh"
+    - name: "validate-fails-on-bad-release"
+      description: "/work/check_release.py exits non-zero for a folder with changed and wrongly signed files"
+      type: "file"
+      source: "validation/validate-fails-on-bad-release.sh"
+    - name: "validate-reports-every-failure"
+      description: "The output of the check names every bad file, not only the first"
+      type: "file"
+      source: "validation/validate-reports-every-failure.sh"
+    - name: "validate-intruder-still-refused"
+      description: "A file signed by the intruder service account is still refused"
+      type: "file"
+      source: "validation/validate-intruder-still-refused.sh"
+teardown:
+  keepCluster: false
+runtime:
+  kind:
+    preloadImages:
+      - alpine:3.22
+      - python:3.13.17-slim

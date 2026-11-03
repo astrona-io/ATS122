@@ -4,7 +4,7 @@ A Sigstore signature of a file comes as a **bundle**: one JSON file with the sig
 
 sigstore-go is the Sigstore project's Go library for signing and verifying bundles. Keep one sentence in mind: **a verifier answers two questions, "is this signature valid?" and "is the signer the one I expect?", and it must refuse the file when either answer is no.**
 
-The module has two parts. **What A Verifier Checks** takes a bundle and a trusted root apart and lists every check a verifier makes, using `cosign verify-blob` as the reference. **Writing A Verifier With sigstore-go** builds a small Go program that makes the same checks; a graded lab follows it.
+The module has four parts. **What A Verifier Checks** takes a bundle and a trusted root apart and lists every check a verifier makes, using `cosign verify-blob` as the reference. **Writing A Verifier With sigstore-go** builds a small Go program that makes the same checks; a graded lab follows it. **Verifier Evidence Thresholds** explains each option that sets how much evidence the verifier demands. **Testing A Verifier With Broken Bundles** builds bundles that must fail and checks that the verifier refuses each one.
 
 ## Learning objectives
 
@@ -16,6 +16,8 @@ After this module you can:
 - Build a sigstore-go verifier with thresholds for certificate transparency, the transparency log and timestamps.
 - Write a policy that requires both the artifact and the expected signer identity.
 - Make a verifier fail with a non-zero exit code when any check fails.
+- Choose evidence thresholds on purpose, and say what each option protects against.
+- Build broken bundles with `jq` and show that a verifier refuses each one for the right reason.
 
 ## Before you start
 

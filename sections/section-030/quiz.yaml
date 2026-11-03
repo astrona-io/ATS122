@@ -203,7 +203,7 @@ questions:
     difficulty: beginner
     learning_objective: "Explain why clients interoperate"
     source_readings:
-      - sections/section-030/module-01/course-03-other-language-clients.md
+      - sections/section-030/module-01/course-04-other-language-clients.md
     prompt: "Why does a bundle written by sigstore-python verify with sigstore-go or cosign?"
     options:
       - id: a
@@ -226,7 +226,7 @@ questions:
     difficulty: intermediate
     learning_objective: "Choose a trustworthy client"
     source_readings:
-      - sections/section-030/module-01/course-03-other-language-clients.md
+      - sections/section-030/module-01/course-04-other-language-clients.md
     prompt: "Which client is not enough for verification?"
     options:
       - id: a
@@ -243,3 +243,141 @@ questions:
         explanation: "Correct. A client must let you require an identity and an issuer."
     correct_option: d
     explanation: "Correct. A client must let you require an identity and an issuer."
+
+  - id: ats122-030-q11
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Allow two signers in Python"
+    source_readings:
+      - sections/section-030/module-02/course-01-policies-for-more-than-one-signer.md
+    prompt: "Which policy accepts a bundle signed by `developer` or by `ci-bot`?"
+    options:
+      - id: a
+        text: "`AllOf` with two `Identity` objects"
+        explanation: "Not correct. Both identities would have to sign."
+      - id: b
+        text: "`AnyOf` with two `Identity` objects"
+        explanation: "Correct. One matching identity is enough."
+      - id: c
+        text: "`UnsafeNoOp`"
+        explanation: "Not correct. It accepts every signer."
+      - id: d
+        text: "One `Identity` for `developer` only"
+        explanation: "Not correct. This refuses `ci-bot`."
+    correct_option: b
+    explanation: "Correct. `AnyOf` accepts when one policy matches."
+
+  - id: ats122-030-q12
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Know when UnsafeNoOp is wrong"
+    source_readings:
+      - sections/section-030/module-02/course-01-policies-for-more-than-one-signer.md
+    prompt: "What does a successful check with `UnsafeNoOp` prove?"
+    options:
+      - id: a
+        text: "That the expected signer signed."
+        explanation: "Not correct. It does not check the signer."
+      - id: b
+        text: "Only that the signature is valid."
+        explanation: "Correct. Any signer passes."
+      - id: c
+        text: "That the file is safe to run."
+        explanation: "Not correct. Nothing is known about the content."
+      - id: d
+        text: "That the log entry is missing."
+        explanation: "Not correct. The log is still checked."
+    correct_option: b
+    explanation: "Correct. It proves a valid signature and nothing about who signed."
+
+  - id: ats122-030-q13
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read a bundle without trusting it"
+    source_readings:
+      - sections/section-030/module-02/course-02-inspecting-a-bundle-with-jq-and-openssl.md
+    prompt: "What does reading a bundle with `jq` and `openssl` tell you?"
+    options:
+      - id: a
+        text: "That the signer is trusted."
+        explanation: "Not correct. Only a verifier checks trust."
+      - id: b
+        text: "What the bundle claims, but not whether it is valid."
+        explanation: "Correct. Reading is not verifying."
+      - id: c
+        text: "Whether the file is safe."
+        explanation: "Not correct. The content is not examined."
+      - id: d
+        text: "Which policy the verifier uses."
+        explanation: "Not correct. The bundle holds no policy."
+    correct_option: b
+    explanation: "Correct. Only the verifier checks that the claims are signed and logged."
+
+  - id: ats122-030-q14
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Report every failure"
+    source_readings:
+      - sections/section-030/module-02/course-03-errors-and-exit-codes-in-automation.md
+    prompt: "A release check stops at the first bad file with `break`. What is wrong?"
+    options:
+      - id: a
+        text: "Later bad files are never reported."
+        explanation: "Correct. The run ends at the first failure."
+      - id: b
+        text: "It runs too slowly."
+        explanation: "Not correct. Speed is not the issue."
+      - id: c
+        text: "It cannot read bundles."
+        explanation: "Not correct. Reading is unaffected."
+      - id: d
+        text: "It changes the files."
+        explanation: "Not correct. The check does not write files."
+    correct_option: a
+    explanation: "Correct. The check should report every failure."
+
+  - id: ats122-030-q15
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Return the right exit code"
+    source_readings:
+      - sections/section-030/module-02/course-03-errors-and-exit-codes-in-automation.md
+    prompt: "A release check ends with `return 0` whatever happened in the loop. What does the pipeline see?"
+    options:
+      - id: a
+        text: "A failure whenever a file is bad."
+        explanation: "Not correct. The code is always zero."
+      - id: b
+        text: "Success even when files failed."
+        explanation: "Correct. A fixed zero hides every failure."
+      - id: c
+        text: "A warning only."
+        explanation: "Not correct. A pipeline reads the code, not a warning."
+      - id: d
+        text: "A timeout."
+        explanation: "Not correct. Nothing waits."
+    correct_option: b
+    explanation: "Correct. The check must return the failure count."
+
+  - id: ats122-030-q16
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Verify an old bundle"
+    source_readings:
+      - sections/section-030/module-02/course-04-token-and-certificate-lifetime.md
+    prompt: "A certificate is valid for about ten minutes. Why does an old bundle still verify?"
+    options:
+      - id: a
+        text: "The verifier checks the certificate against the current time."
+        explanation: "Not correct. That would refuse every old bundle."
+      - id: b
+        text: "The verifier takes the time from the log, so the certificate was valid at signing."
+        explanation: "Correct. The log entry proves when it was signed."
+      - id: c
+        text: "Certificates are renewed daily."
+        explanation: "Not correct. They are not renewed."
+      - id: d
+        text: "The verifier ignores the certificate."
+        explanation: "Not correct. It checks the certificate chain."
+    correct_option: b
+    explanation: "Correct. The time comes from the log, not from now."

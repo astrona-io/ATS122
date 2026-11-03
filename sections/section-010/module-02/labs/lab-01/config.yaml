@@ -1,0 +1,58 @@
+# Sign And Verify A Release Tag
+# Astrona graded lab. Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-122-lab-010-02"
+  docs:
+    guide: "solution.md"
+    solution: "solution.md"
+    question: "question.md"
+    examQuestion: "question.md"
+    prerequisites: "prerequisites.md"
+bootstrap:
+  init:
+    - name: "install-sigstore"
+      description: "Installs Helm 3.22.1, the private Sigstore stack (scaffold chart 0.6.117), the workstation pod and its trust material, Gitea"
+      type: "file"
+      source: "bootstrap/01-install-sigstore.sh"
+    - name: "ats-122-lab-010-02-setup"
+      description: "Creates the starting state the task works from"
+      type: "file"
+      source: "bootstrap/02-seed-state.sh"
+  manifests:
+    - name: "lab-start"
+      description: "The workstation pod and its service accounts (namespace workstation)."
+      type: "file"
+      source: "manifests/lab-start.yaml"
+testing:
+  init:
+    - name: "wait-for-sigstore"
+      description: "Waits until Fulcio, Rekor and the trust material are ready"
+      type: "file"
+      source: "testing/wait-for-sigstore.sh"
+    - name: "reference-solution"
+      description: "The remediation a correct learner performs; used by `astrona test`"
+      type: "file"
+      source: "solution/apply.sh"
+validation:
+  scripts:
+    - name: "validate-tag-config"
+      description: "The repository /root/inventory-app signs every new tag (tag.gpgsign true)"
+      type: "file"
+      source: "validation/validate-tag-config.sh"
+    - name: "validate-tag-signed"
+      description: "Gitea has an annotated tag v1.0.0 on the tip of main that gitsign verify-tag accepts as the developer service account"
+      type: "file"
+      source: "validation/validate-tag-signed.sh"
+    - name: "validate-old-tag-kept"
+      description: "The unsigned tag v0.9.0 is unchanged"
+      type: "file"
+      source: "validation/validate-old-tag-kept.sh"
+teardown:
+  keepCluster: false
+runtime:
+  kind:
+    preloadImages:
+      - alpine:3.22
+      - gitea/gitea:28.2.0-rootless
+      - nicolaka/netshoot:v0.13

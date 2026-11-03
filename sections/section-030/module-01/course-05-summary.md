@@ -9,6 +9,7 @@ In code, `ClientTrustConfig.from_json` loads the trust configuration, `IdentityT
 - Sign the bytes on disk exactly; any change, even stripped whitespace, breaks the digest.
 - Require the signer's identity and issuer; a valid signature from the wrong signer must fail.
 - Let a verification error stop the work; never log it and carry on.
+- A GitHub Actions certificate names the workflow file and the Git reference, with the GitHub issuer; pin both when you verify.
 - Check a language client for identity checks, current bundle support and private-instance support before you depend on it.
 
 <!-- astrona:playground:destroy -->

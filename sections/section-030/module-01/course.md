@@ -4,7 +4,7 @@ A release pipeline written in Python needs to sign what it builds and check what
 
 Keep one sentence in mind: **the token decides who signs, the trust configuration decides where, and the policy decides whom you accept.**
 
-The module has three parts. **The sigstore-python Command Line** signs and verifies a file with the `sigstore` command against the private stack. **Signing And Verifying In Python Code** does the same from a script with the library; a graded lab follows it. **The Other Language Clients** covers the Sigstore clients for Java, JavaScript, Rust and Ruby, and what to check before you choose one.
+The module has four parts. **The sigstore-python Command Line** signs and verifies a file with the `sigstore` command against the private stack. **Signing And Verifying In Python Code** does the same from a script with the library; a graded lab follows it. **Verifying GitHub Actions Signatures** explains the workflow identity of a CI signer and the `verify github` command. **The Other Language Clients** covers the Sigstore clients for Java, JavaScript, Rust and Ruby, and what to check before you choose one.
 
 ## Learning objectives
 
@@ -15,6 +15,7 @@ After this module you can:
 - Explain why Fulcio needs the token audience `sigstore`.
 - Sign a file from Python with `SigningContext`, `IdentityToken` and `sign_artifact`.
 - Verify a file from Python with `Verifier`, `Bundle` and an `Identity` policy.
+- Describe the identity in a GitHub Actions certificate and say when to use `verify github`.
 - Name the other Sigstore language clients and the checks to make before using one.
 
 ## Before you start

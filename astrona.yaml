@@ -100,8 +100,48 @@ modules:
         title: "Verifying Who Signed A Commit"
         path: sections/section-010/module-01/course-03-verifying-signed-commits.md
       - type: reading
-        title: Summary
-        path: sections/section-010/module-01/course-04-summary.md
+        title: "Fixing Unsigned And Wrongly Signed Commits"
+        path: sections/section-010/module-01/course-04-fixing-and-resigning-commits.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-010/module-01/course-05-summary.md
+
+      - type: reading
+        title: "Run Gitsign In Pipelines And Fix Signing Problems"
+        path: sections/section-010/module-02/course.md
+      - type: reading
+        title: "Identity Token Providers"
+        path: sections/section-010/module-02/course-01-identity-token-providers.md
+      - type: reading
+        title: "Signing And Verifying Tags"
+        path: sections/section-010/module-02/course-02-signing-and-verifying-tags.md
+      - type: reading
+        title: Question
+        path: sections/section-010/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Sign And Verify A Release Tag Lab"
+        path: sections/section-010/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: gitsign-tags
+        task_kind: troubleshooting
+        tags: [gitsign, tag-signing, verify-tag, keyless, service-account-token]
+        learning_goals:
+          - Sign an annotated release tag with gitsign
+          - Verify the tag with the expected identity and issuer
+          - Prove that a tag signed by another identity is refused
+        resources:
+          - name: "gitsign"
+            url: https://github.com/sigstore/gitsign
+      - type: reading
+        title: "Verifying History In A Pipeline"
+        path: sections/section-010/module-02/course-03-verifying-history-in-a-pipeline.md
+      - type: reading
+        title: "Troubleshooting Gitsign"
+        path: sections/section-010/module-02/course-04-troubleshooting-gitsign.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-010/module-02/course-05-summary.md
 
       - type: reading
         title: Question
@@ -173,8 +213,51 @@ modules:
           - name: "Sigstore bundle format"
             url: https://docs.sigstore.dev/about/bundle/
       - type: reading
-        title: Summary
-        path: sections/section-020/module-01/course-03-summary.md
+        title: "Verifier Evidence Thresholds"
+        path: sections/section-020/module-01/course-03-verifier-evidence-thresholds.md
+      - type: reading
+        title: "Testing A Verifier With Broken Bundles"
+        path: sections/section-020/module-01/course-04-testing-verifier-failures.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-020/module-01/course-05-summary.md
+
+      - type: reading
+        title: "Signer Policies And Verification Results"
+        path: sections/section-020/module-02/course.md
+      - type: reading
+        title: "Matching Signers With Regular Expressions"
+        path: sections/section-020/module-02/course-01-matching-signers-with-regular-expressions.md
+      - type: reading
+        title: Question
+        path: sections/section-020/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Accept Two Signers With A Pattern Lab"
+        path: sections/section-020/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: go-client
+        task_kind: troubleshooting
+        tags: [sigstore-go, certificate-identity, regular-expression, bundle, keyless]
+        learning_goals:
+          - Accept two service account signers with one anchored pattern
+          - Keep refusing an unknown signer and a changed file
+          - Fail when no identity pattern is given
+        resources:
+          - name: "sigstore-go verify package"
+            url: https://pkg.go.dev/github.com/sigstore/sigstore-go/pkg/verify
+      - type: reading
+        title: "Reading The Verification Result"
+        path: sections/section-020/module-02/course-02-reading-the-verification-result.md
+      - type: reading
+        title: "Trusted Roots And Validity Windows"
+        path: sections/section-020/module-02/course-03-trusted-roots-and-validity-windows.md
+      - type: reading
+        title: "Artifact Policies"
+        path: sections/section-020/module-02/course-04-artifact-policies.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-020/module-02/course-05-summary.md
 
       - type: reading
         title: Question
@@ -245,11 +328,51 @@ modules:
           - name: "sigstore-python API documentation"
             url: https://sigstore.github.io/sigstore-python/
       - type: reading
-        title: "The Other Language Clients"
-        path: sections/section-030/module-01/course-03-other-language-clients.md
+        title: "Verifying GitHub Actions Signatures"
+        path: sections/section-030/module-01/course-03-verifying-github-actions-signatures.md
       - type: reading
-        title: Summary
-        path: sections/section-030/module-01/course-04-summary.md
+        title: "The Other Language Clients"
+        path: sections/section-030/module-01/course-04-other-language-clients.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-030/module-01/course-05-summary.md
+
+      - type: reading
+        title: "Release Checks In Python"
+        path: sections/section-030/module-02/course.md
+      - type: reading
+        title: "Policies For More Than One Signer"
+        path: sections/section-030/module-02/course-01-policies-for-more-than-one-signer.md
+      - type: reading
+        title: "Inspecting A Bundle With jq And openssl"
+        path: sections/section-030/module-02/course-02-inspecting-a-bundle-with-jq-and-openssl.md
+      - type: reading
+        title: "Errors And Exit Codes In Automation"
+        path: sections/section-030/module-02/course-03-errors-and-exit-codes-in-automation.md
+      - type: reading
+        title: Question
+        path: sections/section-030/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Make The Release Check Accept Two Signers Lab"
+        path: sections/section-030/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: python-client
+        task_kind: troubleshooting
+        tags: [sigstore-python, policy, anyof, exit-code, release-check]
+        learning_goals:
+          - Accept two signers in one Python policy
+          - Report every failing file and exit with a non-zero status
+          - Keep refusing an unknown signer
+        resources:
+          - name: "sigstore-python API documentation"
+            url: https://sigstore.github.io/sigstore-python/
+      - type: reading
+        title: "Token And Certificate Lifetime"
+        path: sections/section-030/module-02/course-04-token-and-certificate-lifetime.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-030/module-02/course-05-summary.md
 
       - type: reading
         title: Question

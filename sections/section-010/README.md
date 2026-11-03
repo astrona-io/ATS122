@@ -15,6 +15,10 @@ This section teaches the whole loop on a private Sigstore stack in your cluster:
 - The gitsign settings for an instance: `gitsign.fulcio`, `gitsign.rekor`, `gitsign.tokenProvider`, and the credential cache.
 - Verifying a commit with `gitsign verify`, `--certificate-identity` and `--certificate-oidc-issuer`, and why `git verify-commit` is not enough.
 - Why GitHub shows gitsign commits as unverified.
+- Re-signing unsigned and wrongly signed commits with a rebase.
+- Token providers for pipelines: `filesystem`, `envvar` and `github-actions`, and the identity a workflow receives.
+- Signing and verifying release tags with `gitsign verify-tag`.
+- Verifying every commit of a range in a pipeline, and finding the cause of a signing failure with `GITSIGN_LOG`.
 
 ## The learning path
 
@@ -23,7 +27,16 @@ The module starts at its landing page, which also launches the playground. The p
 1. How Gitsign Signs A Commit
 2. Configuring Git To Sign With Gitsign, followed by the lab **Sign Every Commit With Gitsign**
 3. Verifying Who Signed A Commit
-4. Summary
+4. Fixing Unsigned And Wrongly Signed Commits
+5. Summary
+
+The second module, Run Gitsign In Pipelines And Fix Signing Problems, has its own playground with Gitea and a workstation pod. It covers how a pipeline gets an identity token, how to sign and verify release tags, how to check the history of a branch, and how to troubleshoot signing.
+
+1. Identity Token Providers
+2. Signing And Verifying Tags, followed by the lab **Sign And Verify A Release Tag**
+3. Verifying History In A Pipeline
+4. Troubleshooting Gitsign
+5. Summary
 
 ## Section capstone: Re-Sign A Release Branch With The Right Identity
 

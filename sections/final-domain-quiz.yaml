@@ -200,7 +200,7 @@ questions:
     difficulty: beginner
     learning_objective: "Explain why clients interoperate"
     source_readings:
-      - sections/section-030/module-01/course-03-other-language-clients.md
+      - sections/section-030/module-01/course-04-other-language-clients.md
     prompt: "Why does a bundle written by sigstore-python verify with sigstore-go or cosign?"
     options:
       - id: a
@@ -217,3 +217,141 @@ questions:
         explanation: "Not correct. Each client verifies by itself."
     correct_option: c
     explanation: "Correct. The shared data makes them interchangeable, as long as they trust the same Fulcio and logs."
+
+  - id: ats122-final-q10
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose a token provider for a pipeline"
+    source_readings:
+      - sections/section-010/module-02/course-01-identity-token-providers.md
+    prompt: "A pod has its service account token mounted as a file. Which gitsign token provider reads it?"
+    options:
+      - id: a
+        text: "`interactive`"
+        explanation: "Not correct. That opens a browser."
+      - id: b
+        text: "`filesystem`"
+        explanation: "Correct. It reads the mounted token file."
+      - id: c
+        text: "`envvar`"
+        explanation: "Not correct. It reads an environment variable."
+      - id: d
+        text: "`github-actions`"
+        explanation: "Not correct. It asks GitHub for a token."
+    correct_option: b
+    explanation: "Correct. The `filesystem` provider reads the mounted file."
+
+  - id: ats122-final-q11
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Verify a signed tag"
+    source_readings:
+      - sections/section-010/module-02/course-02-signing-and-verifying-tags.md
+    prompt: "Which command checks the signer of a release tag?"
+    options:
+      - id: a
+        text: "`git verify-tag`"
+        explanation: "Not correct. It does not check the signer identity."
+      - id: b
+        text: "`gitsign verify-tag` with `--certificate-identity` and `--certificate-oidc-issuer`"
+        explanation: "Correct. It checks signature, proof and identity."
+      - id: c
+        text: "`git log --show-signature`"
+        explanation: "Not correct. It does not check the identity."
+      - id: d
+        text: "`gitsign verify HEAD`"
+        explanation: "Not correct. That checks a commit."
+    correct_option: b
+    explanation: "Correct. `gitsign verify-tag` with the identity options checks the signer."
+
+  - id: ats122-final-q12
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Anchor an identity pattern"
+    source_readings:
+      - sections/section-020/module-02/course-01-matching-signers-with-regular-expressions.md
+    prompt: "Why anchor an identity pattern with `^` and `$`?"
+    options:
+      - id: a
+        text: "Without anchors it matches inside a longer identity."
+        explanation: "Correct. Another signer can then pass."
+      - id: b
+        text: "It makes the issuer optional."
+        explanation: "Not correct. The issuer is separate."
+      - id: c
+        text: "It is needed to compile."
+        explanation: "Not correct. It compiles without anchors."
+      - id: d
+        text: "It speeds up verification."
+        explanation: "Not correct. Speed is not the reason."
+    correct_option: a
+    explanation: "Correct. Anchors stop partial matches."
+
+  - id: ats122-final-q13
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Trust a digest only from a safe place"
+    source_readings:
+      - sections/section-020/module-02/course-04-artifact-policies.md
+    prompt: "Where should the expected digest of a release file come from?"
+    options:
+      - id: a
+        text: "A file next to the artifact."
+        explanation: "Not correct. An attacker can change both."
+      - id: b
+        text: "A source the attacker cannot change."
+        explanation: "Correct. Then a changed file no longer matches."
+      - id: c
+        text: "The bundle only."
+        explanation: "Not correct. Then the file is not checked."
+      - id: d
+        text: "The file name."
+        explanation: "Not correct. A name carries no digest."
+    correct_option: b
+    explanation: "Correct. The digest must come from an unreachable source."
+
+  - id: ats122-final-q14
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Allow two signers in Python"
+    source_readings:
+      - sections/section-030/module-02/course-01-policies-for-more-than-one-signer.md
+    prompt: "Which sigstore-python policy accepts either of two signers?"
+    options:
+      - id: a
+        text: "`AllOf` with two identities"
+        explanation: "Not correct. Both would have to sign."
+      - id: b
+        text: "`AnyOf` with two identities"
+        explanation: "Correct. One match is enough."
+      - id: c
+        text: "`UnsafeNoOp`"
+        explanation: "Not correct. It accepts any signer."
+      - id: d
+        text: "A single `Identity`"
+        explanation: "Not correct. It accepts one signer."
+    correct_option: b
+    explanation: "Correct. `AnyOf` accepts when one policy matches."
+
+  - id: ats122-final-q15
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Return the right exit code"
+    source_readings:
+      - sections/section-030/module-02/course-03-errors-and-exit-codes-in-automation.md
+    prompt: "A release check always ends with `return 0`. What happens?"
+    options:
+      - id: a
+        text: "The pipeline stops at the first bad file."
+        explanation: "Not correct. The code is always zero."
+      - id: b
+        text: "The pipeline passes even when files failed."
+        explanation: "Correct. A fixed zero hides failures."
+      - id: c
+        text: "The pipeline shows a warning."
+        explanation: "Not correct. A pipeline reads the code."
+      - id: d
+        text: "The check reports every failure and fails."
+        explanation: "Not correct. It reports nothing through the code."
+    correct_option: b
+    explanation: "Correct. The check must return the failure count."

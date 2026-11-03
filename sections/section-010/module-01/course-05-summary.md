@@ -11,6 +11,6 @@ A signature only proves that some accepted identity signed. `gitsign verify` wit
 - The signature proves the content; the certificate and the identity check prove the signer.
 - The identity of a Kubernetes service account is `https://kubernetes.io/namespaces/<namespace>/serviceaccounts/<name>`.
 - Verify every commit of a branch, not only the last one.
-- Fix a wrong or missing signature by signing the same content again, then force-push.
+- Fix a wrong or missing signature by signing the same content again: amend the newest commit with `git commit --amend --no-edit -S`, or run `git rebase --force-rebase --gpg-sign` for a series. The commits get new hashes, so push with `--force-with-lease`.
 
 <!-- astrona:playground:destroy -->

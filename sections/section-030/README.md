@@ -13,6 +13,9 @@ This section uses sigstore-python against the private Sigstore stack in your clu
 - Why the identity token's audience must be `sigstore`, and where ambient credentials come from.
 - Signing from Python with `SigningContext`, `IdentityToken` and `sign_artifact`.
 - Verifying from Python with `Verifier`, `Bundle` and an `Identity` policy.
+- Verifying a signature made by a GitHub Actions workflow with `sigstore verify github`.
+- Policies for more than one signer: `AnyOf`, `AllOf` and `UnsafeNoOp`.
+- Reading a bundle with `jq` and `openssl`, exit codes in automation, and the lifetime of tokens and certificates.
 - Which other Sigstore language clients exist and what to check before you use one.
 
 ## The learning path
@@ -21,8 +24,17 @@ The module starts at its landing page, which also launches the playground. The p
 
 1. The sigstore-python Command Line
 2. Signing And Verifying In Python Code, followed by the lab **Sign And Verify A Build Output From Python**
-3. The Other Language Clients
-4. Summary
+3. Verifying GitHub Actions Signatures
+4. The Other Language Clients
+5. Summary
+
+The second module, Release Checks In Python, has its own playground with two release folders signed by different service accounts.
+
+1. Policies For More Than One Signer
+2. Inspecting A Bundle With jq And openssl
+3. Errors And Exit Codes In Automation, followed by the lab **Make The Release Check Accept Two Signers**
+4. Token And Certificate Lifetime
+5. Summary
 
 ## Section capstone: Repair A Python Release Signing Step
 

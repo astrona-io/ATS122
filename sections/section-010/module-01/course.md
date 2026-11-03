@@ -4,7 +4,7 @@ Git records an author and a committer on every commit, but it never checks them.
 
 gitsign is a Git signing program from the Sigstore project. It signs **keylessly**: instead of a long-lived private key on your laptop, it creates a key for one signing, asks Fulcio (Sigstore's certificate authority) for a short-lived certificate that names you, and records the signing in Rekor (Sigstore's transparency log). Keep one sentence in mind: **the signature proves the content, and the certificate proves the signer.**
 
-The module has three parts. **How Gitsign Signs A Commit** follows one signing from the identity token to the Rekor entry and shows where the signature sits in a commit. **Configuring Git To Sign With Gitsign** sets up a repository to sign every commit against a Sigstore instance; a graded lab follows it. **Verifying Who Signed A Commit** checks a signature and the signer's identity with `gitsign verify`.
+The module has four parts. **How Gitsign Signs A Commit** follows one signing from the identity token to the Rekor entry and shows where the signature sits in a commit. **Configuring Git To Sign With Gitsign** sets up a repository to sign every commit against a Sigstore instance; a graded lab follows it. **Verifying Who Signed A Commit** checks a signature and the signer's identity with `gitsign verify`. **Fixing Unsigned And Wrongly Signed Commits** re-signs a commit or a branch and publishes the new history.
 
 ## Learning objectives
 
@@ -16,6 +16,7 @@ After this module you can:
 - Configure Git and gitsign to sign every commit of one repository against a Sigstore instance.
 - Verify a commit with `gitsign verify` and an expected identity and issuer.
 - Explain why `git verify-commit` does not check who signed, and why GitHub shows gitsign commits as unverified.
+- Re-sign an unsigned or wrongly signed commit, or a whole branch, and push the rewritten history safely.
 
 ## Before you start
 

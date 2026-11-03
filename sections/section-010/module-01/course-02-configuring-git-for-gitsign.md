@@ -11,7 +11,7 @@ Git needs three settings to sign with gitsign. Each one is a normal `git config`
 | `gpg.format` | `x509` | Git calls an X.509 signing program and stores a CMS signature |
 | `gpg.x509.program` | `gitsign` | The X.509 signing program is gitsign |
 | `commit.gpgsign` | `true` | Every new commit is signed, as if you passed `-S` |
-| `tag.gpgsign` | `true` | Every new annotated tag is signed, as if you passed `-s` |
+| `tag.gpgsign` | `true` | Every new tag is signed, as if you passed `-s` |
 
 The gitsign documentation warns that with `commit.gpgsign` set, every commit needs the signing services. If they cannot be reached, the commit fails. Without it, you sign one commit at a time with `git commit -S`.
 

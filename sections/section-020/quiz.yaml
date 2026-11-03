@@ -243,3 +243,141 @@ questions:
         explanation: "Not correct. A private stack needs its own root passed in."
     correct_option: c
     explanation: "Correct. A verifier only believes what its trusted root names."
+
+  - id: ats122-020-q11
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Anchor an identity pattern"
+    source_readings:
+      - sections/section-020/module-02/course-01-matching-signers-with-regular-expressions.md
+    prompt: "Why must an identity pattern start with `^` and end with `$`?"
+    options:
+      - id: a
+        text: "Without anchors it matches anywhere in the identity, so another signer can pass."
+        explanation: "Correct. This is the risk."
+      - id: b
+        text: "Anchors make the pattern faster."
+        explanation: "Not correct. Speed is not the reason."
+      - id: c
+        text: "Anchors are required to compile the pattern."
+        explanation: "Not correct. A pattern without anchors compiles."
+      - id: d
+        text: "Anchors make the issuer optional."
+        explanation: "Not correct. The issuer is a separate check."
+    correct_option: a
+    explanation: "Correct. Without anchors a pattern matches inside a longer identity."
+
+  - id: ats122-020-q12
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Handle a missing pattern"
+    source_readings:
+      - sections/section-020/module-02/course-01-matching-signers-with-regular-expressions.md
+    prompt: "A verifier gets an empty identity pattern. What must it do?"
+    options:
+      - id: a
+        text: "Accept every signer, because nothing was asked."
+        explanation: "Not correct. That lets every signer through."
+      - id: b
+        text: "Return an error and stop."
+        explanation: "Correct. A forgotten flag must not turn the check off."
+      - id: c
+        text: "Use `WithoutIdentitiesUnsafe` and log a warning."
+        explanation: "Not correct. That also accepts every signer."
+      - id: d
+        text: "Fall back to the issuer only."
+        explanation: "Not correct. That still accepts any identity of the issuer."
+    correct_option: b
+    explanation: "Correct. An empty pattern is a configuration error."
+
+  - id: ats122-020-q13
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read the verification result"
+    source_readings:
+      - sections/section-020/module-02/course-02-reading-the-verification-result.md
+    prompt: "After `Verify` returns without an error, where does a program read the signer identity?"
+    options:
+      - id: a
+        text: "In `result.Signature.Certificate.SubjectAlternativeName`."
+        explanation: "Correct. The result holds the certificate fields."
+      - id: b
+        text: "In the policy."
+        explanation: "Not correct. The policy holds what was asked, not what was found."
+      - id: c
+        text: "In the file name of the bundle."
+        explanation: "Not correct. The name proves nothing."
+      - id: d
+        text: "In the trusted root."
+        explanation: "Not correct. The root holds keys, not the signer."
+    correct_option: a
+    explanation: "Correct. The result holds the certificate fields of the signer."
+
+  - id: ats122-020-q14
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Understand validity windows"
+    source_readings:
+      - sections/section-020/module-02/course-03-trusted-roots-and-validity-windows.md
+    prompt: "A signing key is rotated out. What should happen to its entry in the trusted root?"
+    options:
+      - id: a
+        text: "Remove it, so old bundles stop verifying."
+        explanation: "Not correct. Removing it breaks bundles signed while it was valid."
+      - id: b
+        text: "Close its validity window and keep the entry."
+        explanation: "Correct. Old bundles still verify and new ones cannot use the key."
+      - id: c
+        text: "Keep it open for ever."
+        explanation: "Not correct. An old key would stay valid for new signatures."
+      - id: d
+        text: "Move it to the policy."
+        explanation: "Not correct. The policy does not hold keys."
+    correct_option: b
+    explanation: "Correct. The window closes and the entry stays."
+
+  - id: ats122-020-q15
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose an artifact policy"
+    source_readings:
+      - sections/section-020/module-02/course-04-artifact-policies.md
+    prompt: "Which policy option ties a bundle to a digest you already have?"
+    options:
+      - id: a
+        text: "`WithoutArtifactUnsafe`"
+        explanation: "Not correct. It removes the tie to any file."
+      - id: b
+        text: "`WithArtifactDigest`"
+        explanation: "Correct. It names the algorithm and the digest bytes."
+      - id: c
+        text: "`WithoutIdentitiesUnsafe`"
+        explanation: "Not correct. It concerns the signer, not the artifact."
+      - id: d
+        text: "`WithObserverTimestamps`"
+        explanation: "Not correct. It concerns time evidence."
+    correct_option: b
+    explanation: "Correct. `WithArtifactDigest` takes the algorithm and the digest."
+
+  - id: ats122-020-q16
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Trust a digest only from a safe place"
+    source_readings:
+      - sections/section-020/module-02/course-04-artifact-policies.md
+    prompt: "Where must the expected digest come from in a release gate?"
+    options:
+      - id: a
+        text: "From a file next to the artifact."
+        explanation: "Not correct. Whoever can change the file can change that digest."
+      - id: b
+        text: "From a source an attacker cannot reach."
+        explanation: "Correct. Then a changed file no longer matches."
+      - id: c
+        text: "From the bundle itself, with no other check."
+        explanation: "Not correct. The bundle then proves nothing about the file."
+      - id: d
+        text: "From the file name."
+        explanation: "Not correct. A name carries no digest."
+    correct_option: b
+    explanation: "Correct. The digest must come from a source the attacker cannot change."

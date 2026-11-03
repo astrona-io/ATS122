@@ -243,3 +243,141 @@ questions:
         explanation: "Not correct. The old commits would stay unsigned or wrongly signed."
     correct_option: a
     explanation: "Correct. The content stays the same and every commit gets a new signature from the right identity."
+
+  - id: ats122-010-q11
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Choose a token provider for a pipeline"
+    source_readings:
+      - sections/section-010/module-02/course-01-identity-token-providers.md
+    prompt: "A pipeline pod has its service account token mounted at `/var/run/sigstore/cosign/oidc-token`. Which gitsign token provider reads it?"
+    options:
+      - id: a
+        text: "`interactive`"
+        explanation: "Not correct. That provider opens a browser login."
+      - id: b
+        text: "`filesystem`"
+        explanation: "Correct. The provider reads the token from that file."
+      - id: c
+        text: "`envvar`"
+        explanation: "Not correct. That provider reads `SIGSTORE_ID_TOKEN`, not a file."
+      - id: d
+        text: "`github-actions`"
+        explanation: "Not correct. That provider asks GitHub for a token."
+    correct_option: b
+    explanation: "Correct. The `filesystem` provider reads that file."
+
+  - id: ats122-010-q12
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain what decides the signer"
+    source_readings:
+      - sections/section-010/module-02/course-01-identity-token-providers.md
+    prompt: "A pod runs as `developer`, but a commit is made with a `ci-bot` token in `SIGSTORE_ID_TOKEN` and the `envvar` provider. Who does the certificate name?"
+    options:
+      - id: a
+        text: "`developer`, because the pod runs as that account."
+        explanation: "Not correct. The pod identity is not used when a token is given."
+      - id: b
+        text: "`ci-bot`, because the token decides the signer."
+        explanation: "Correct. The certificate names the identity in the token."
+      - id: c
+        text: "Both accounts."
+        explanation: "Not correct. A certificate holds one identity."
+      - id: d
+        text: "Nobody, because the provider and the pod differ."
+        explanation: "Not correct. Fulcio only checks the token."
+    correct_option: b
+    explanation: "Correct. The token decides the signer, not the pod."
+
+  - id: ats122-010-q13
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Verify a signed tag"
+    source_readings:
+      - sections/section-010/module-02/course-02-signing-and-verifying-tags.md
+    prompt: "Which command checks both the signer of a release tag and the issuer?"
+    options:
+      - id: a
+        text: "`git verify-tag v1.0.0`"
+        explanation: "Not correct. It does not check the signer identity."
+      - id: b
+        text: "`git tag -v v1.0.0`"
+        explanation: "Not correct. It does not check the signer identity either."
+      - id: c
+        text: "`gitsign verify-tag --certificate-identity=... --certificate-oidc-issuer=... v1.0.0`"
+        explanation: "Correct. gitsign checks the signature, the Rekor proof and the identity."
+      - id: d
+        text: "`gitsign verify HEAD`"
+        explanation: "Not correct. That verifies a commit, not a tag."
+    correct_option: c
+    explanation: "Correct. `gitsign verify-tag` with the identity and issuer options checks the signer."
+
+  - id: ats122-010-q14
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Handle a wrong released tag"
+    source_readings:
+      - sections/section-010/module-02/course-02-signing-and-verifying-tags.md
+    prompt: "A signed release tag points at the wrong commit. What is the safe fix?"
+    options:
+      - id: a
+        text: "Delete the tag and create it again on the right commit with the same name."
+        explanation: "Not correct. Clones that already have the old tag keep it."
+      - id: b
+        text: "Publish a new signed tag, for example `v1.0.1`, on the right commit."
+        explanation: "Correct. A released tag is final, so the fix is a new tag."
+      - id: c
+        text: "Run `git push --force` on the tag."
+        explanation: "Not correct. Clones do not replace a tag unless the user forces it."
+      - id: d
+        text: "Sign the old tag a second time."
+        explanation: "Not correct. That does not change the commit it points at."
+    correct_option: b
+    explanation: "Correct. A released tag is final, so publish a new one."
+
+  - id: ats122-010-q15
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Allow more than one signer in a history check"
+    source_readings:
+      - sections/section-010/module-02/course-03-verifying-history-in-a-pipeline.md
+    prompt: "A history check must accept `developer` and `ci-bot`, and no other account. Which pattern does that?"
+    options:
+      - id: a
+        text: "`.*`"
+        explanation: "Not correct. It accepts every signer."
+      - id: b
+        text: "`serviceaccounts/.*`"
+        explanation: "Not correct. It accepts every account of the namespace."
+      - id: c
+        text: "`^https://kubernetes\\.io/namespaces/workstation/serviceaccounts/(developer|ci-bot)$`"
+        explanation: "Correct. It names each allowed account and is anchored."
+      - id: d
+        text: "`developer|ci-bot`"
+        explanation: "Not correct. Without anchors it matches anywhere in the identity."
+    correct_option: c
+    explanation: "Correct. An anchored pattern that lists the accounts allows only those accounts."
+
+  - id: ats122-010-q16
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Find the cause of a signing failure"
+    source_readings:
+      - sections/section-010/module-02/course-04-troubleshooting-gitsign.md
+    prompt: "Git prints only `gpg failed to sign the data`. What is the first step to find the cause?"
+    options:
+      - id: a
+        text: "Run the commit again until it works."
+        explanation: "Not correct. This does not show a reason."
+      - id: b
+        text: "Set `GITSIGN_LOG` to a file path and read the file."
+        explanation: "Correct. gitsign writes its own errors there."
+      - id: c
+        text: "Delete the Fulcio certificate."
+        explanation: "Not correct. Nothing is stored locally to delete."
+      - id: d
+        text: "Switch to `git verify-commit`."
+        explanation: "Not correct. Verification does not explain a signing failure."
+    correct_option: b
+    explanation: "Correct. `GITSIGN_LOG` gives the real error."

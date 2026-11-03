@@ -27,9 +27,9 @@ section contains:
 
 | Section | Title | Modules | Labs | Topic |
 | --- | --- | --- | --- | --- |
-| [010](sections/section-010) | Signing Git Commits With Gitsign | 1 | 1 + capstone | gitsign |
-| [020](sections/section-020) | Verifying Signatures From Go | 1 | 1 + capstone | sigstore-go |
-| [030](sections/section-030) | Signing And Verifying From Python | 1 | 1 + capstone | sigstore-python |
+| [010](sections/section-010) | Signing Git Commits With Gitsign | 2 | 2 + capstone | gitsign |
+| [020](sections/section-020) | Verifying Signatures From Go | 2 | 2 + capstone | sigstore-go |
+| [030](sections/section-030) | Signing And Verifying From Python | 2 | 2 + capstone | sigstore-python |
 
 ---
 
@@ -37,9 +37,12 @@ section contains:
 
 | Module | Reader | Parts | Labs |
 | --- | --- | --- | --- |
-| 010-01 | [Sign And Verify Git Commits With Gitsign](sections/section-010/module-01/course.md) | 3 | [lab-01](sections/section-010/module-01/labs/lab-01) |
-| 020-01 | [Verify Sigstore Bundles From Go](sections/section-020/module-01/course.md) | 2 | [lab-01](sections/section-020/module-01/labs/lab-01) |
-| 030-01 | [Sign And Verify From Python](sections/section-030/module-01/course.md) | 3 | [lab-01](sections/section-030/module-01/labs/lab-01) |
+| 010-01 | [Sign And Verify Git Commits With Gitsign](sections/section-010/module-01/course.md) | 4 | [lab-01](sections/section-010/module-01/labs/lab-01) |
+| 010-02 | [Run Gitsign In Pipelines And Fix Signing Problems](sections/section-010/module-02/course.md) | 4 | [lab-01](sections/section-010/module-02/labs/lab-01) |
+| 020-01 | [Verify Sigstore Bundles From Go](sections/section-020/module-01/course.md) | 4 | [lab-01](sections/section-020/module-01/labs/lab-01) |
+| 020-02 | [Signer Policies And Verification Results](sections/section-020/module-02/course.md) | 4 | [lab-01](sections/section-020/module-02/labs/lab-01) |
+| 030-01 | [Sign And Verify From Python](sections/section-030/module-01/course.md) | 4 | [lab-01](sections/section-030/module-01/labs/lab-01) |
+| 030-02 | [Release Checks In Python](sections/section-030/module-02/course.md) | 4 | [lab-01](sections/section-030/module-02/labs/lab-01) |
 
 ---
 
