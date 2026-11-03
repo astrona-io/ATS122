@@ -123,6 +123,11 @@ modules:
             url: https://github.com/sigstore/gitsign
           - name: "Verifying signatures"
             url: https://docs.sigstore.dev/cosign/verifying/verify/
+      - type: quiz
+        title: "Knowledge Check: Signing Git Commits With Gitsign"
+        path: sections/section-010/quiz.yaml
+        pass_score: 70
+
 
   - id: module-020
     title: "Verifying Signatures From Go"
@@ -191,6 +196,11 @@ modules:
             url: https://github.com/sigstore/sigstore-go
           - name: "sigstore-go verify package"
             url: https://pkg.go.dev/github.com/sigstore/sigstore-go/pkg/verify
+      - type: quiz
+        title: "Knowledge Check: Verifying Signatures From Go"
+        path: sections/section-020/quiz.yaml
+        pass_score: 70
+
 
   - id: module-030
     title: "Signing And Verifying From Python"
@@ -261,3 +271,11 @@ modules:
             url: https://github.com/sigstore/sigstore-python
           - name: "OIDC usage in Fulcio"
             url: https://docs.sigstore.dev/certificate_authority/oidc-in-fulcio/
+      - type: quiz
+        title: "Knowledge Check: Signing And Verifying From Python"
+        path: sections/section-030/quiz.yaml
+        pass_score: 70
+      - type: quiz
+        title: "Final Domain Quiz"
+        path: sections/final-domain-quiz.yaml
+        pass_score: 70

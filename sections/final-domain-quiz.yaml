@@ -1,0 +1,219 @@
+# Final domain knowledge check across all three sections.
+schema_version: 1
+kind: question_bank
+id: ats122-final
+course_id: ATS122
+exam_code: SIGSTORE
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: domain
+  id: developer-tooling
+  title: "Developer Tooling: Gitsign & Language Clients"
+questions:
+  - id: ats122-final-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name what each keyless signing component does"
+    source_readings:
+      - sections/section-010/module-01/course-01-how-gitsign-signs-a-commit.md
+    prompt: "Which component issues the short-lived certificate for gitsign's new public key?"
+    options:
+      - id: a
+        text: "Rekor"
+        explanation: "Not correct. Rekor records the signing in a log. It issues no certificate."
+      - id: b
+        text: "The OIDC provider"
+        explanation: "Not correct. The provider only issues the identity token."
+      - id: c
+        text: "Fulcio"
+        explanation: "Correct. Fulcio checks the identity token and issues the X.509 certificate."
+      - id: d
+        text: "Git"
+        explanation: "Not correct. Git calls the signing program and stores the result."
+    correct_option: c
+    explanation: "Correct. Fulcio checks the identity token and issues the X.509 certificate."
+
+  - id: ats122-final-q02
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain what Git's own verification checks"
+    source_readings:
+      - sections/section-010/module-01/course-03-verifying-signed-commits.md
+    prompt: "What does `git verify-commit` prove about a gitsign commit?"
+    options:
+      - id: a
+        text: "That the expected service account signed it."
+        explanation: "Not correct. Git does not know the expected identity."
+      - id: b
+        text: "That the author line matches the certificate."
+        explanation: "Not correct. That needs `gitsign.matchCommitter`, and it never matches service accounts."
+      - id: c
+        text: "That the commit was pushed to the hosting service."
+        explanation: "Not correct. The command does not look at any remote."
+      - id: d
+        text: "That some accepted identity signed it and that the signing is in Rekor, but not who signed it."
+        explanation: "Correct. Git passes no expected identity to gitsign."
+    correct_option: d
+    explanation: "Correct. Git passes no expected identity to gitsign."
+
+  - id: ats122-final-q03
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Repair the signatures of a branch"
+    source_readings:
+      - sections/section-010/module-01/course-03-verifying-signed-commits.md
+    prompt: "A branch has four commits. One is unsigned and one is signed by another identity. How do you fix it and keep the messages and files?"
+    options:
+      - id: a
+        text: "Re-sign the series with `git rebase --force-rebase --gpg-sign <base>`, then force-push the branch."
+        explanation: "Correct. The content stays the same and every commit gets a new signature from the right identity."
+      - id: b
+        text: "Run `gitsign verify` on each commit until it passes."
+        explanation: "Not correct. Verifying changes nothing in the commits."
+      - id: c
+        text: "Set `gitsign.matchCommitter` to `true`."
+        explanation: "Not correct. That only adds a check and never matches service account identities."
+      - id: d
+        text: "Create four new commits with new messages on top of the branch."
+        explanation: "Not correct. The old commits would stay unsigned or wrongly signed."
+    correct_option: a
+    explanation: "Correct. The content stays the same and every commit gets a new signature from the right identity."
+
+  - id: ats122-final-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain how expired certificates are checked"
+    source_readings:
+      - sections/section-020/module-01/course-01-what-a-verifier-checks.md
+    prompt: "Fulcio certificates expire minutes after signing. Against which time does a verifier check the certificate?"
+    options:
+      - id: a
+        text: "The time Rekor recorded the signing."
+        explanation: "Correct. The integrated time of the log entry is the signing time."
+      - id: b
+        text: "The time of the verification."
+        explanation: "Not correct. The certificate would always look expired."
+      - id: c
+        text: "The time in the file's modification date."
+        explanation: "Not correct. A verifier does not trust file dates."
+      - id: d
+        text: "The time the trusted root was created."
+        explanation: "Not correct. That date says nothing about the signing."
+    correct_option: a
+    explanation: "Correct. The integrated time of the log entry is the signing time."
+
+  - id: ats122-final-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name the risk of the unsafe identity option"
+    source_readings:
+      - sections/section-020/module-01/course-02-writing-a-verifier-with-sigstore-go.md
+    prompt: "What does `verify.WithoutIdentitiesUnsafe()` do?"
+    options:
+      - id: a
+        text: "It skips the digest check of the file."
+        explanation: "Not correct. The artifact is checked by `verify.WithArtifact`."
+      - id: b
+        text: "It checks the identity against a regular expression."
+        explanation: "Not correct. Regular expressions go into `NewShortCertificateIdentity`."
+      - id: c
+        text: "It disables the transparency log check."
+        explanation: "Not correct. The log is set with `WithTransparencyLog`."
+      - id: d
+        text: "It skips the identity check, so any signer with a valid certificate is accepted."
+        explanation: "Correct. It is only for inspecting a bundle, never for a decision."
+    correct_option: d
+    explanation: "Correct. It is only for inspecting a bundle, never for a decision."
+
+  - id: ats122-final-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Set the verifier thresholds"
+    source_readings:
+      - sections/section-020/module-01/course-02-writing-a-verifier-with-sigstore-go.md
+    prompt: "What does `verify.WithTransparencyLog(1)` require?"
+    options:
+      - id: a
+        text: "One entry in a transparency log that is in the trusted root."
+        explanation: "Correct. It is a threshold on the log evidence."
+      - id: b
+        text: "One signed certificate timestamp from a CT log."
+        explanation: "Not correct. That is `WithSignedCertificateTimestamps(1)`."
+      - id: c
+        text: "One timestamp authority response."
+        explanation: "Not correct. `WithObserverTimestamps(1)` accepts a trusted time from a log entry or an authority."
+      - id: d
+        text: "One signer identity in the policy."
+        explanation: "Not correct. The identity is part of the policy."
+    correct_option: a
+    explanation: "Correct. It is a threshold on the log evidence."
+
+  - id: ats122-final-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Check the token audience"
+    source_readings:
+      - sections/section-030/module-01/course-01-the-sigstore-python-command-line.md
+    prompt: "Which `aud` claim must the identity token have here?"
+    options:
+      - id: a
+        text: "`kubernetes`"
+        explanation: "Not correct. That is not the audience Fulcio accepts here."
+      - id: b
+        text: "`sigstore`"
+        explanation: "Correct. sigstore-python and Fulcio both check it."
+      - id: c
+        text: "The cluster issuer URL."
+        explanation: "Not correct. The issuer is the `iss` claim."
+      - id: d
+        text: "The name of the service account."
+        explanation: "Not correct. The service account is in the `sub` claim."
+    correct_option: b
+    explanation: "Correct. sigstore-python and Fulcio both check it."
+
+  - id: ats122-final-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read a failed identity check"
+    source_readings:
+      - sections/section-030/module-01/course-01-the-sigstore-python-command-line.md
+    prompt: "A file signed by `ci-bot` is verified with the identity of `developer`. What happens?"
+    options:
+      - id: a
+        text: "It passes, because the signature is valid."
+        explanation: "Not correct. The identity check refuses it."
+      - id: b
+        text: "It fails because the signature is broken."
+        explanation: "Not correct. The signature itself is fine."
+      - id: c
+        text: "It passes after a warning from Rekor."
+        explanation: "Not correct. Rekor gives no warnings for this."
+      - id: d
+        text: "It fails. The signature is valid, but the certificate names a different signer."
+        explanation: "Correct. A valid signature from the wrong signer is still refused."
+    correct_option: d
+    explanation: "Correct. A valid signature from the wrong signer is still refused."
+
+  - id: ats122-final-q09
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain why clients interoperate"
+    source_readings:
+      - sections/section-030/module-01/course-03-other-language-clients.md
+    prompt: "Why does a bundle written by sigstore-python verify with sigstore-go or cosign?"
+    options:
+      - id: a
+        text: "They all share the same source code."
+        explanation: "Not correct. Each client is its own library."
+      - id: b
+        text: "Every client has the same features and maturity."
+        explanation: "Not correct. Their features move at different speeds."
+      - id: c
+        text: "All clients share the Sigstore bundle format and the trusted root and signing configuration documents."
+        explanation: "Correct. The shared data makes them interchangeable, as long as they trust the same Fulcio and logs."
+      - id: d
+        text: "They all call the Python client in the background."
+        explanation: "Not correct. Each client verifies by itself."
+    correct_option: c
+    explanation: "Correct. The shared data makes them interchangeable, as long as they trust the same Fulcio and logs."

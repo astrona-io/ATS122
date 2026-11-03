@@ -1,0 +1,245 @@
+# Knowledge check for section 010. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats122-010
+course_id: ATS122
+exam_code: SIGSTORE
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-010
+  title: "Signing Git Commits With Gitsign"
+placement:
+  position: after
+  reading: sections/section-010/capstone/labs/lab-01/question.md
+questions:
+  - id: ats122-010-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain where Git keeps a signature"
+    source_readings:
+      - sections/section-010/module-01/course-01-how-gitsign-signs-a-commit.md
+    prompt: "Which part of a signed Git commit object holds the signature?"
+    options:
+      - id: a
+        text: "The `gpgsig` header, which covers every other line of the commit object."
+        explanation: "Correct. Git adds the `gpgsig` header and the signature covers the rest of the commit."
+      - id: b
+        text: "A separate file in the `.git/refs` directory."
+        explanation: "Not correct. The signature is stored inside the commit object, not in a ref."
+      - id: c
+        text: "The commit message, as a last line."
+        explanation: "Not correct. The message is part of what is signed. It does not hold the signature."
+      - id: d
+        text: "The `author` line, next to the email address."
+        explanation: "Not correct. The author line is plain text and proves nothing."
+    correct_option: a
+    explanation: "Correct. Git adds the `gpgsig` header and the signature covers the rest of the commit."
+
+  - id: ats122-010-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Configure Git to call gitsign"
+    source_readings:
+      - sections/section-010/module-01/course-02-configuring-git-for-gitsign.md
+    prompt: "Which value of `gpg.format` makes Git call gitsign?"
+    options:
+      - id: a
+        text: "`openpgp`"
+        explanation: "Not correct. That makes Git call `gpg`, which gitsign is not."
+      - id: b
+        text: "`x509`"
+        explanation: "Correct. gitsign is an X.509 signing program that returns a CMS signature."
+      - id: c
+        text: "`ssh`"
+        explanation: "Not correct. That makes Git sign with an SSH key."
+      - id: d
+        text: "`sigstore`"
+        explanation: "Not correct. Git has no such format. gitsign is selected with `x509` and `gpg.x509.program`."
+    correct_option: b
+    explanation: "Correct. gitsign is an X.509 signing program that returns a CMS signature."
+
+  - id: ats122-010-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name what each keyless signing component does"
+    source_readings:
+      - sections/section-010/module-01/course-01-how-gitsign-signs-a-commit.md
+    prompt: "Which component issues the short-lived certificate for gitsign's new public key?"
+    options:
+      - id: a
+        text: "Rekor"
+        explanation: "Not correct. Rekor records the signing in a log. It issues no certificate."
+      - id: b
+        text: "The OIDC provider"
+        explanation: "Not correct. The provider only issues the identity token."
+      - id: c
+        text: "Fulcio"
+        explanation: "Correct. Fulcio checks the identity token and issues the X.509 certificate."
+      - id: d
+        text: "Git"
+        explanation: "Not correct. Git calls the signing program and stores the result."
+    correct_option: c
+    explanation: "Correct. Fulcio checks the identity token and issues the X.509 certificate."
+
+  - id: ats122-010-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain why the transparency log matters"
+    source_readings:
+      - sections/section-010/module-01/course-01-how-gitsign-signs-a-commit.md
+    prompt: "The certificate in a gitsign commit expires about ten minutes after signing. Why can the commit still be verified later?"
+    options:
+      - id: a
+        text: "Fulcio renews the certificate every time the commit is read."
+        explanation: "Not correct. Fulcio does not renew issued certificates."
+      - id: b
+        text: "gitsign keeps the private key so it can sign again."
+        explanation: "Not correct. gitsign throws the private key away after the signing."
+      - id: c
+        text: "Git ignores the certificate expiry date for every signed commit."
+        explanation: "Not correct. A plain X.509 check would reject the expired certificate. The Rekor time is what helps."
+      - id: d
+        text: "The Rekor proof carries the time of the signing, so the certificate is checked as it was at that time."
+        explanation: "Correct. The log entry shows the certificate was valid when the signing happened."
+    correct_option: d
+    explanation: "Correct. The log entry shows the certificate was valid when the signing happened."
+
+  - id: ats122-010-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Compare the Rekor modes of gitsign"
+    source_readings:
+      - sections/section-010/module-01/course-01-how-gitsign-signs-a-commit.md
+    prompt: "In `offline` Rekor mode, what does the commit itself carry?"
+    options:
+      - id: a
+        text: "The signature, the certificate and the Rekor proof."
+        explanation: "Correct. Verification reads the proof from the commit and needs no search."
+      - id: b
+        text: "Only the signature. The certificate stays in Rekor."
+        explanation: "Not correct. The certificate is stored in the commit."
+      - id: c
+        text: "Only the commit hash. Everything else is in Rekor."
+        explanation: "Not correct. That describes what Rekor stores in online mode."
+      - id: d
+        text: "The private key, encrypted with the token."
+        explanation: "Not correct. gitsign never stores the private key."
+    correct_option: a
+    explanation: "Correct. Verification reads the proof from the commit and needs no search."
+
+  - id: ats122-010-q06
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Point gitsign at a private instance"
+    source_readings:
+      - sections/section-010/module-01/course-02-configuring-git-for-gitsign.md
+    prompt: "What does `gitsign.tokenProvider` set to `filesystem` make gitsign do?"
+    options:
+      - id: a
+        text: "Open a browser to log in with GitHub."
+        explanation: "Not correct. That is the `interactive` provider."
+      - id: b
+        text: "Read the identity token from the file `/var/run/sigstore/cosign/oidc-token`."
+        explanation: "Correct. The filesystem provider reads the token file, so no login is needed."
+      - id: c
+        text: "Ask the GitHub Actions job for a token."
+        explanation: "Not correct. That is the `github-actions` provider."
+      - id: d
+        text: "Store the signed commits on the local disk instead of Rekor."
+        explanation: "Not correct. The setting only says where the token comes from."
+    correct_option: b
+    explanation: "Correct. The filesystem provider reads the token file, so no login is needed."
+
+  - id: ats122-010-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Know which gitsign setting wins"
+    source_readings:
+      - sections/section-010/module-01/course-02-configuring-git-for-gitsign.md
+    prompt: "`GITSIGN_FULCIO_URL` is set in the shell and `gitsign.fulcio` is set in the repository. Which address does gitsign use?"
+    options:
+      - id: a
+        text: "The Git setting, because it is more specific to the repository."
+        explanation: "Not correct. The environment variable wins."
+      - id: b
+        text: "Both, one after the other."
+        explanation: "Not correct. gitsign uses one Fulcio address for a signing."
+      - id: c
+        text: "The environment variable, because it wins over Git configuration."
+        explanation: "Correct. The environment variable has priority when both exist."
+      - id: d
+        text: "The public instance, because the two values conflict."
+        explanation: "Not correct. A conflict does not send gitsign to the public instance."
+    correct_option: c
+    explanation: "Correct. The environment variable has priority when both exist."
+
+  - id: ats122-010-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain what Git's own verification checks"
+    source_readings:
+      - sections/section-010/module-01/course-03-verifying-signed-commits.md
+    prompt: "What does `git verify-commit` prove about a gitsign commit?"
+    options:
+      - id: a
+        text: "That the expected service account signed it."
+        explanation: "Not correct. Git does not know the expected identity."
+      - id: b
+        text: "That the author line matches the certificate."
+        explanation: "Not correct. That needs `gitsign.matchCommitter`, and it never matches service accounts."
+      - id: c
+        text: "That the commit was pushed to the hosting service."
+        explanation: "Not correct. The command does not look at any remote."
+      - id: d
+        text: "That some accepted identity signed it and that the signing is in Rekor, but not who signed it."
+        explanation: "Correct. Git passes no expected identity to gitsign."
+    correct_option: d
+    explanation: "Correct. Git passes no expected identity to gitsign."
+
+  - id: ats122-010-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Verify a commit against an expected identity"
+    source_readings:
+      - sections/section-010/module-01/course-03-verifying-signed-commits.md
+    prompt: "You run `gitsign verify` without `--certificate-identity` in gitsign v0.18.0. Which identity does it expect?"
+    options:
+      - id: a
+        text: "Any identity, because no value is given."
+        explanation: "Not correct. The check still needs an identity and does not skip it."
+      - id: b
+        text: "The committer email address of the commit."
+        explanation: "Correct. That fits the public instance, but not a service account URI."
+      - id: c
+        text: "The issuer read from `/trust/issuer`."
+        explanation: "Not correct. The issuer is a separate option."
+      - id: d
+        text: "The service account of the current pod."
+        explanation: "Not correct. gitsign does not read the pod identity for this check."
+    correct_option: b
+    explanation: "Correct. That fits the public instance, but not a service account URI."
+
+  - id: ats122-010-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Repair the signatures of a branch"
+    source_readings:
+      - sections/section-010/module-01/course-03-verifying-signed-commits.md
+    prompt: "A branch has four commits. One is unsigned and one is signed by another identity. How do you fix it and keep the messages and files?"
+    options:
+      - id: a
+        text: "Re-sign the series with `git rebase --force-rebase --gpg-sign <base>`, then force-push the branch."
+        explanation: "Correct. The content stays the same and every commit gets a new signature from the right identity."
+      - id: b
+        text: "Run `gitsign verify` on each commit until it passes."
+        explanation: "Not correct. Verifying changes nothing in the commits."
+      - id: c
+        text: "Set `gitsign.matchCommitter` to `true`."
+        explanation: "Not correct. That only adds a check and never matches service account identities."
+      - id: d
+        text: "Create four new commits with new messages on top of the branch."
+        explanation: "Not correct. The old commits would stay unsigned or wrongly signed."
+    correct_option: a
+    explanation: "Correct. The content stays the same and every commit gets a new signature from the right identity."

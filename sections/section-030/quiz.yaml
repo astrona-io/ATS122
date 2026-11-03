@@ -1,0 +1,245 @@
+# Knowledge check for section 030. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats122-030
+course_id: ATS122
+exam_code: SIGSTORE
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-030
+  title: "Signing And Verifying From Python"
+placement:
+  position: after
+  reading: sections/section-030/capstone/labs/lab-01/question.md
+questions:
+  - id: ats122-030-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe the client trust configuration"
+    source_readings:
+      - sections/section-030/module-01/course-01-the-sigstore-python-command-line.md
+    prompt: "Which two documents does the client trust configuration file of sigstore-python hold?"
+    options:
+      - id: a
+        text: "A bundle and a certificate."
+        explanation: "Not correct. Those are results of signing, not configuration."
+      - id: b
+        text: "An identity token and a policy."
+        explanation: "Not correct. The token and the identity are passed separately."
+      - id: c
+        text: "A trusted root and a signing configuration."
+        explanation: "Correct. The root checks results. The signing configuration names Fulcio, Rekor and the OIDC provider."
+      - id: d
+        text: "A Fulcio key and a Rekor key."
+        explanation: "Not correct. The file holds the whole trusted root and the service addresses."
+    correct_option: c
+    explanation: "Correct. The root checks results. The signing configuration names Fulcio, Rekor and the OIDC provider."
+
+  - id: ats122-030-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Use the global trust option"
+    source_readings:
+      - sections/section-030/module-01/course-01-the-sigstore-python-command-line.md
+    prompt: "Where does `--trust-config` go in a `sigstore` command?"
+    options:
+      - id: a
+        text: "After `sign`, as in `sigstore sign --trust-config FILE`."
+        explanation: "Not correct. The subcommand does not take it."
+      - id: b
+        text: "In the file name of the bundle."
+        explanation: "Not correct. The bundle file name does not carry options."
+      - id: c
+        text: "It is read from `SIGSTORE_IDENTITY_TOKEN`."
+        explanation: "Not correct. That variable holds the identity token."
+      - id: d
+        text: "Before the subcommand, as in `sigstore --trust-config FILE sign ...`."
+        explanation: "Correct. It is a global option."
+    correct_option: d
+    explanation: "Correct. It is a global option."
+
+  - id: ats122-030-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Pass a Kubernetes token to the client"
+    source_readings:
+      - sections/section-030/module-01/course-01-the-sigstore-python-command-line.md
+    prompt: "Why must you pass the service account token with `--identity-token` in the pod?"
+    options:
+      - id: a
+        text: "Ambient detection covers CI systems such as GitHub Actions, not a token file in a pod."
+        explanation: "Correct. sigstore-python does not find the mounted token by itself."
+      - id: b
+        text: "The token file is encrypted and needs a flag to decrypt it."
+        explanation: "Not correct. The token is a plain signed JWT."
+      - id: c
+        text: "Fulcio refuses tokens that come from files."
+        explanation: "Not correct. Fulcio checks the signature and audience, not where the token was stored."
+      - id: d
+        text: "The command always opens a browser otherwise, and a pod has none."
+        explanation: "Not correct. The cause is the missing ambient detection for Kubernetes tokens."
+    correct_option: a
+    explanation: "Correct. sigstore-python does not find the mounted token by itself."
+
+  - id: ats122-030-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Check the token audience"
+    source_readings:
+      - sections/section-030/module-01/course-01-the-sigstore-python-command-line.md
+    prompt: "Which `aud` claim must the identity token have here?"
+    options:
+      - id: a
+        text: "`kubernetes`"
+        explanation: "Not correct. That is not the audience Fulcio accepts here."
+      - id: b
+        text: "`sigstore`"
+        explanation: "Correct. sigstore-python and Fulcio both check it."
+      - id: c
+        text: "The cluster issuer URL."
+        explanation: "Not correct. The issuer is the `iss` claim."
+      - id: d
+        text: "The name of the service account."
+        explanation: "Not correct. The service account is in the `sub` claim."
+    correct_option: b
+    explanation: "Correct. sigstore-python and Fulcio both check it."
+
+  - id: ats122-030-q05
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Verify with an expected identity"
+    source_readings:
+      - sections/section-030/module-01/course-01-the-sigstore-python-command-line.md
+    prompt: "Which options does `sigstore verify identity` need to name the expected signer?"
+    options:
+      - id: a
+        text: "`--identity-token` and `--overwrite`"
+        explanation: "Not correct. Those are used when signing."
+      - id: b
+        text: "`--bundle` and `--trust-config` only"
+        explanation: "Not correct. They do not say who must have signed."
+      - id: c
+        text: "`--cert-identity` and `--cert-oidc-issuer`"
+        explanation: "Correct. The identity and the issuer together name the signer."
+      - id: d
+        text: "`--repository` and `--workflow`"
+        explanation: "Not correct. Those are checks of `verify github`."
+    correct_option: c
+    explanation: "Correct. The identity and the issuer together name the signer."
+
+  - id: ats122-030-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read a failed identity check"
+    source_readings:
+      - sections/section-030/module-01/course-01-the-sigstore-python-command-line.md
+    prompt: "A file signed by `ci-bot` is verified with the identity of `developer`. What happens?"
+    options:
+      - id: a
+        text: "It passes, because the signature is valid."
+        explanation: "Not correct. The identity check refuses it."
+      - id: b
+        text: "It fails because the signature is broken."
+        explanation: "Not correct. The signature itself is fine."
+      - id: c
+        text: "It passes after a warning from Rekor."
+        explanation: "Not correct. Rekor gives no warnings for this."
+      - id: d
+        text: "It fails. The signature is valid, but the certificate names a different signer."
+        explanation: "Correct. A valid signature from the wrong signer is still refused."
+    correct_option: d
+    explanation: "Correct. A valid signature from the wrong signer is still refused."
+
+  - id: ats122-030-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Sign the exact bytes of a file"
+    source_readings:
+      - sections/section-030/module-01/course-02-signing-and-verifying-in-python-code.md
+    prompt: "A script reads the file as text, strips it and signs that text. What goes wrong?"
+    options:
+      - id: a
+        text: "The signed bytes differ from the file on disk, so the digest in the bundle does not match."
+        explanation: "Correct. `sign_artifact` must get the bytes exactly as they are."
+      - id: b
+        text: "Fulcio refuses the request."
+        explanation: "Not correct. Fulcio never sees the file content."
+      - id: c
+        text: "The certificate is issued for the wrong identity."
+        explanation: "Not correct. The identity comes from the token."
+      - id: d
+        text: "Nothing. Text and bytes give the same digest."
+        explanation: "Not correct. Any change of bytes changes the digest."
+    correct_option: a
+    explanation: "Correct. `sign_artifact` must get the bytes exactly as they are."
+
+  - id: ats122-030-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Handle a verification error"
+    source_readings:
+      - sections/section-030/module-01/course-02-signing-and-verifying-in-python-code.md
+    prompt: "Which exception does `verify_artifact` raise when a check fails, and what should a script do?"
+    options:
+      - id: a
+        text: "`ValueError`, and retry the check."
+        explanation: "Not correct. The library raises `VerificationError`."
+      - id: b
+        text: "`VerificationError`, and exit with a non-zero code."
+        explanation: "Correct. A script that catches it must fail, not carry on."
+      - id: c
+        text: "`VerificationError`, and log it then exit with code `0`."
+        explanation: "Not correct. That passes every file."
+      - id: d
+        text: "No exception. It returns `False`."
+        explanation: "Not correct. It raises an error."
+    correct_option: b
+    explanation: "Correct. A script that catches it must fail, not carry on."
+
+  - id: ats122-030-q09
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain why clients interoperate"
+    source_readings:
+      - sections/section-030/module-01/course-03-other-language-clients.md
+    prompt: "Why does a bundle written by sigstore-python verify with sigstore-go or cosign?"
+    options:
+      - id: a
+        text: "They all share the same source code."
+        explanation: "Not correct. Each client is its own library."
+      - id: b
+        text: "Every client has the same features and maturity."
+        explanation: "Not correct. Their features move at different speeds."
+      - id: c
+        text: "All clients share the Sigstore bundle format and the trusted root and signing configuration documents."
+        explanation: "Correct. The shared data makes them interchangeable, as long as they trust the same Fulcio and logs."
+      - id: d
+        text: "They all call the Python client in the background."
+        explanation: "Not correct. Each client verifies by itself."
+    correct_option: c
+    explanation: "Correct. The shared data makes them interchangeable, as long as they trust the same Fulcio and logs."
+
+  - id: ats122-030-q10
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose a trustworthy client"
+    source_readings:
+      - sections/section-030/module-01/course-03-other-language-clients.md
+    prompt: "Which client is not enough for verification?"
+    options:
+      - id: a
+        text: "One that accepts a private trusted root."
+        explanation: "Not correct. That is needed for a private stack."
+      - id: b
+        text: "One that requires a transparency log entry."
+        explanation: "Not correct. That is a check a client should make."
+      - id: c
+        text: "One that raises an error when verification fails."
+        explanation: "Not correct. Failing closed is what you want."
+      - id: d
+        text: "One that only checks that the file is signed by someone."
+        explanation: "Correct. A client must let you require an identity and an issuer."
+    correct_option: d
+    explanation: "Correct. A client must let you require an identity and an issuer."

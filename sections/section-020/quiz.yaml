@@ -1,0 +1,245 @@
+# Knowledge check for section 020. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats122-020
+course_id: ATS122
+exam_code: SIGSTORE
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-020
+  title: "Verifying Signatures From Go"
+placement:
+  position: after
+  reading: sections/section-020/capstone/labs/lab-01/question.md
+questions:
+  - id: ats122-020-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the parts of a Sigstore bundle"
+    source_readings:
+      - sections/section-020/module-01/course-01-what-a-verifier-checks.md
+    prompt: "Which top-level fields does a Sigstore bundle have?"
+    options:
+      - id: a
+        text: "`certificate`, `rekor` and `digest`"
+        explanation: "Not correct. These are not top-level fields. The certificate sits inside `verificationMaterial`."
+      - id: b
+        text: "`mediaType`, `verificationMaterial` and `messageSignature`"
+        explanation: "Correct. They name the format and hold the certificate with log entries, and the digest with the signature."
+      - id: c
+        text: "`trustedRoot`, `signingConfig` and `mediaType`"
+        explanation: "Not correct. Those belong to the client trust configuration."
+      - id: d
+        text: "`issuer`, `identity` and `signature`"
+        explanation: "Not correct. The issuer and the identity are inside the certificate."
+    correct_option: b
+    explanation: "Correct. They name the format and hold the certificate with log entries, and the digest with the signature."
+
+  - id: ats122-020-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain what a trusted root holds"
+    source_readings:
+      - sections/section-020/module-01/course-01-what-a-verifier-checks.md
+    prompt: "What does a trusted root hold?"
+    options:
+      - id: a
+        text: "The signer identities that are allowed to sign."
+        explanation: "Not correct. The identity is set in the policy."
+      - id: b
+        text: "The private key of Fulcio."
+        explanation: "Not correct. A trusted root only holds public material."
+      - id: c
+        text: "The Fulcio certificate chains and the public keys of the transparency logs and CT logs a verifier accepts."
+        explanation: "Correct. A verifier needs this to check the evidence in a bundle."
+      - id: d
+        text: "The list of files that were signed."
+        explanation: "Not correct. The bundle names the digest of its own file."
+    correct_option: c
+    explanation: "Correct. A verifier needs this to check the evidence in a bundle."
+
+  - id: ats122-020-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Detect a file changed after signing"
+    source_readings:
+      - sections/section-020/module-01/course-01-what-a-verifier-checks.md
+    prompt: "Which comparison catches a file that changed after it was signed?"
+    options:
+      - id: a
+        text: "The certificate expiry against the current time."
+        explanation: "Not correct. The certificate always expires minutes after signing."
+      - id: b
+        text: "The Rekor log index against the file name."
+        explanation: "Not correct. The log index says nothing about the content."
+      - id: c
+        text: "The OIDC issuer against the trusted root."
+        explanation: "Not correct. That check is about the signer, not the file."
+      - id: d
+        text: "The digest in the bundle against the digest of the file on disk."
+        explanation: "Correct. A changed file has a different SHA-256 digest."
+    correct_option: d
+    explanation: "Correct. A changed file has a different SHA-256 digest."
+
+  - id: ats122-020-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain how expired certificates are checked"
+    source_readings:
+      - sections/section-020/module-01/course-01-what-a-verifier-checks.md
+    prompt: "Fulcio certificates expire minutes after signing. Against which time does a verifier check the certificate?"
+    options:
+      - id: a
+        text: "The time Rekor recorded the signing."
+        explanation: "Correct. The integrated time of the log entry is the signing time."
+      - id: b
+        text: "The time of the verification."
+        explanation: "Not correct. The certificate would always look expired."
+      - id: c
+        text: "The time in the file's modification date."
+        explanation: "Not correct. A verifier does not trust file dates."
+      - id: d
+        text: "The time the trusted root was created."
+        explanation: "Not correct. That date says nothing about the signing."
+    correct_option: a
+    explanation: "Correct. The integrated time of the log entry is the signing time."
+
+  - id: ats122-020-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain the signed certificate timestamp"
+    source_readings:
+      - sections/section-020/module-01/course-01-what-a-verifier-checks.md
+    prompt: "What does a signed certificate timestamp (SCT) in the certificate prove?"
+    options:
+      - id: a
+        text: "That the file was recorded in Rekor."
+        explanation: "Not correct. That is shown by the transparency log entry."
+      - id: b
+        text: "That Fulcio published the certificate to a CT log in the trusted root."
+        explanation: "Correct. The verifier checks the SCT with the CT log key."
+      - id: c
+        text: "That the signer owns the email address in the certificate."
+        explanation: "Not correct. The SCT is about publication of the certificate."
+      - id: d
+        text: "That the file digest matches the bundle."
+        explanation: "Not correct. That is a separate digest check."
+    correct_option: b
+    explanation: "Correct. The verifier checks the SCT with the CT log key."
+
+  - id: ats122-020-q06
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Load trust material in sigstore-go"
+    source_readings:
+      - sections/section-020/module-01/course-02-writing-a-verifier-with-sigstore-go.md
+    prompt: "Which sigstore-go function loads `trusted_root.json` from a file?"
+    options:
+      - id: a
+        text: "`bundle.LoadJSONFromPath`"
+        explanation: "Not correct. That loads a Sigstore bundle."
+      - id: b
+        text: "`verify.NewPolicy`"
+        explanation: "Not correct. That builds the policy for the signer and the artifact."
+      - id: c
+        text: "`root.NewTrustedRootFromPath`"
+        explanation: "Correct. It loads the Fulcio chains and log keys you trust."
+      - id: d
+        text: "`verify.NewVerifier`"
+        explanation: "Not correct. That builds the verifier from an already loaded trusted root."
+    correct_option: c
+    explanation: "Correct. It loads the Fulcio chains and log keys you trust."
+
+  - id: ats122-020-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name the risk of the unsafe identity option"
+    source_readings:
+      - sections/section-020/module-01/course-02-writing-a-verifier-with-sigstore-go.md
+    prompt: "What does `verify.WithoutIdentitiesUnsafe()` do?"
+    options:
+      - id: a
+        text: "It skips the digest check of the file."
+        explanation: "Not correct. The artifact is checked by `verify.WithArtifact`."
+      - id: b
+        text: "It checks the identity against a regular expression."
+        explanation: "Not correct. Regular expressions go into `NewShortCertificateIdentity`."
+      - id: c
+        text: "It disables the transparency log check."
+        explanation: "Not correct. The log is set with `WithTransparencyLog`."
+      - id: d
+        text: "It skips the identity check, so any signer with a valid certificate is accepted."
+        explanation: "Correct. It is only for inspecting a bundle, never for a decision."
+    correct_option: d
+    explanation: "Correct. It is only for inspecting a bundle, never for a decision."
+
+  - id: ats122-020-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Set the verifier thresholds"
+    source_readings:
+      - sections/section-020/module-01/course-02-writing-a-verifier-with-sigstore-go.md
+    prompt: "What does `verify.WithTransparencyLog(1)` require?"
+    options:
+      - id: a
+        text: "One entry in a transparency log that is in the trusted root."
+        explanation: "Correct. It is a threshold on the log evidence."
+      - id: b
+        text: "One signed certificate timestamp from a CT log."
+        explanation: "Not correct. That is `WithSignedCertificateTimestamps(1)`."
+      - id: c
+        text: "One timestamp authority response."
+        explanation: "Not correct. `WithObserverTimestamps(1)` accepts a trusted time from a log entry or an authority."
+      - id: d
+        text: "One signer identity in the policy."
+        explanation: "Not correct. The identity is part of the policy."
+    correct_option: a
+    explanation: "Correct. It is a threshold on the log evidence."
+
+  - id: ats122-020-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Make a verifier fail closed"
+    source_readings:
+      - sections/section-020/module-01/course-02-writing-a-verifier-with-sigstore-go.md
+    prompt: "A release gate prints a warning when verification fails and then exits with code `0`. What is the result?"
+    options:
+      - id: a
+        text: "Only unsigned files pass."
+        explanation: "Not correct. The exit code `0` hides every failure, not only that one."
+      - id: b
+        text: "Every file passes to the next step, including changed and wrongly signed ones."
+        explanation: "Correct. A verifier must return the error and exit with a non-zero code."
+      - id: c
+        text: "The release is blocked because a warning was printed."
+        explanation: "Not correct. Only the exit code stops the next step."
+      - id: d
+        text: "The trusted root is reloaded and the check runs again."
+        explanation: "Not correct. Nothing reloads it."
+    correct_option: b
+    explanation: "Correct. A verifier must return the error and exit with a non-zero code."
+
+  - id: ats122-020-q10
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose the right trusted root"
+    source_readings:
+      - sections/section-020/module-01/course-01-what-a-verifier-checks.md
+    prompt: "You verify a bundle from a private Sigstore stack with the trusted root of the public instance. What happens?"
+    options:
+      - id: a
+        text: "The bundle passes, because the certificate is inside the bundle."
+        explanation: "Not correct. The bundle certificate alone is not trusted."
+      - id: b
+        text: "Only the identity check fails."
+        explanation: "Not correct. The certificate chain fails first."
+      - id: c
+        text: "Every bundle fails, because the private Fulcio and Rekor are not in that root."
+        explanation: "Correct. A verifier only believes what its trusted root names."
+      - id: d
+        text: "The verifier downloads the private root with TUF."
+        explanation: "Not correct. A private stack needs its own root passed in."
+    correct_option: c
+    explanation: "Correct. A verifier only believes what its trusted root names."
