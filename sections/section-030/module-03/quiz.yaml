@@ -1,0 +1,245 @@
+# Knowledge check for module 030-03. Listed in astrona.yaml as a `type: quiz` entry after the module summary.
+schema_version: 1
+kind: question_bank
+id: ats122-030-03
+course_id: ATS122
+exam_code: SIGSTORE
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: module
+  id: module-03
+  title: "GitHub Workflow Policies And Other Clients"
+placement:
+  position: after
+  reading: sections/section-030/module-03/course-06-summary.md
+questions:
+  - id: ats122-030-03-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the GitHub Actions issuer"
+    source_readings:
+      - sections/section-030/module-03/course-01-the-github-actions-certificate.md
+    prompt: "What is the OIDC issuer of an identity token from a GitHub Actions job?"
+    options:
+      - id: a
+        text: "https://github.com"
+        explanation: "Not correct. The issuer of GitHub Actions tokens is https://token.actions.githubusercontent.com. It is the same for every repository."
+      - id: b
+        text: "https://token.actions.githubusercontent.com"
+        explanation: "Correct. The issuer of GitHub Actions tokens is https://token.actions.githubusercontent.com. It is the same for every repository."
+      - id: c
+        text: "https://actions.github.io"
+        explanation: "Not correct. The issuer of GitHub Actions tokens is https://token.actions.githubusercontent.com. It is the same for every repository."
+      - id: d
+        text: "https://accounts.google.com"
+        explanation: "Not correct. The issuer of GitHub Actions tokens is https://token.actions.githubusercontent.com. It is the same for every repository."
+    correct_option: b
+    explanation: "Correct. The issuer of GitHub Actions tokens is https://token.actions.githubusercontent.com. It is the same for every repository."
+
+  - id: ats122-030-03-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe the identity of a workflow"
+    source_readings:
+      - sections/section-030/module-03/course-01-the-github-actions-certificate.md
+    prompt: "What does the subject alternative name in a certificate for a GitHub workflow hold?"
+    options:
+      - id: a
+        text: "The email address of the person who pushed"
+        explanation: "Not correct. Fulcio builds the identity from the job workflow reference: the repository, the workflow path and the Git reference."
+      - id: b
+        text: "The name of the runner"
+        explanation: "Not correct. Fulcio builds the identity from the job workflow reference: the repository, the workflow path and the Git reference."
+      - id: c
+        text: "The workflow file and Git reference, for example .../.github/workflows/release.yml@refs/tags/v1.0.0"
+        explanation: "Correct. Fulcio builds the identity from the job workflow reference: the repository, the workflow path and the Git reference."
+      - id: d
+        text: "Only the repository name"
+        explanation: "Not correct. Fulcio builds the identity from the job workflow reference: the repository, the workflow path and the Git reference."
+    correct_option: c
+    explanation: "Correct. Fulcio builds the identity from the job workflow reference: the repository, the workflow path and the Git reference."
+
+  - id: ats122-030-03-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "State the permission a workflow needs to sign"
+    source_readings:
+      - sections/section-030/module-03/course-01-the-github-actions-certificate.md
+    prompt: "Which permission must a workflow have so that its job can get an identity token?"
+    options:
+      - id: a
+        text: "contents: write"
+        explanation: "Not correct. The permission id-token: write lets the job request an OIDC token. Without it the signing step fails before it reaches Fulcio."
+      - id: b
+        text: "packages: write"
+        explanation: "Not correct. The permission id-token: write lets the job request an OIDC token. Without it the signing step fails before it reaches Fulcio."
+      - id: c
+        text: "id-token: write"
+        explanation: "Correct. The permission id-token: write lets the job request an OIDC token. Without it the signing step fails before it reaches Fulcio."
+      - id: d
+        text: "actions: read"
+        explanation: "Not correct. The permission id-token: write lets the job request an OIDC token. Without it the signing step fails before it reaches Fulcio."
+    correct_option: c
+    explanation: "Correct. The permission id-token: write lets the job request an OIDC token. Without it the signing step fails before it reaches Fulcio."
+
+  - id: ats122-030-03-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain why the issuer alone is not enough"
+    source_readings:
+      - sections/section-030/module-03/course-01-the-github-actions-certificate.md
+    prompt: "Why is a policy that checks only the GitHub issuer unsafe?"
+    options:
+      - id: a
+        text: "The issuer changes every day"
+        explanation: "Not correct. The issuer says the token came from GitHub, not from your repository. The identity must name the workflow."
+      - id: b
+        text: "Every GitHub job in the world has the same issuer, so it accepts any repository"
+        explanation: "Correct. The issuer says the token came from GitHub, not from your repository. The identity must name the workflow."
+      - id: c
+        text: "The issuer is not stored in the certificate"
+        explanation: "Not correct. The issuer says the token came from GitHub, not from your repository. The identity must name the workflow."
+      - id: d
+        text: "The issuer is only valid for npm"
+        explanation: "Not correct. The issuer says the token came from GitHub, not from your repository. The identity must name the workflow."
+    correct_option: b
+    explanation: "Correct. The issuer says the token came from GitHub, not from your repository. The identity must name the workflow."
+
+  - id: ats122-030-03-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose the policy for a set of signers"
+    source_readings:
+      - sections/section-030/module-03/course-02-writing-a-workflow-policy.md
+    prompt: "A release may be signed by a GitHub workflow or by the service account ci-bot. Which combination accepts a file signed by either?"
+    options:
+      - id: a
+        text: "AllOf of two Identity policies"
+        explanation: "Not correct. AnyOf accepts when at least one policy accepts. AllOf would need both signers on the same file."
+      - id: b
+        text: "AnyOf of two Identity policies"
+        explanation: "Correct. AnyOf accepts when at least one policy accepts. AllOf would need both signers on the same file."
+      - id: c
+        text: "One Identity with a list of names"
+        explanation: "Not correct. AnyOf accepts when at least one policy accepts. AllOf would need both signers on the same file."
+      - id: d
+        text: "UnsafeNoOp"
+        explanation: "Not correct. AnyOf accepts when at least one policy accepts. AllOf would need both signers on the same file."
+    correct_option: b
+    explanation: "Correct. AnyOf accepts when at least one policy accepts. AllOf would need both signers on the same file."
+
+  - id: ats122-030-03-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Find the fault in a workflow identity"
+    source_readings:
+      - sections/section-030/module-03/course-02-writing-a-workflow-policy.md
+    prompt: "A policy uses the identity https://github.com/acme/app/release.yml@refs/tags/v1.0.0 and refuses every file from the workflow. What is wrong?"
+    options:
+      - id: a
+        text: "The tag must be a branch"
+        explanation: "Not correct. The workflow reference includes /.github/workflows/ between the repository and the file name."
+      - id: b
+        text: "The path /.github/workflows/ is missing before the file name"
+        explanation: "Correct. The workflow reference includes /.github/workflows/ between the repository and the file name."
+      - id: c
+        text: "The identity must end with .git"
+        explanation: "Not correct. The workflow reference includes /.github/workflows/ between the repository and the file name."
+      - id: d
+        text: "The scheme must be http"
+        explanation: "Not correct. The workflow reference includes /.github/workflows/ between the repository and the file name."
+    correct_option: b
+    explanation: "Correct. The workflow reference includes /.github/workflows/ between the repository and the file name."
+
+  - id: ats122-030-03-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Pick the pin for a release"
+    source_readings:
+      - sections/section-030/module-03/course-03-pinning-workflows-and-references.md
+    prompt: "Which pin is strongest for a release workflow when the repository protects its tags?"
+    options:
+      - id: a
+        text: "refs/heads/main"
+        explanation: "Not correct. A protected tag can be created only by people allowed to do so, so the identity cannot be produced from a branch or a pull request."
+      - id: b
+        text: "A regular expression for any reference"
+        explanation: "Not correct. A protected tag can be created only by people allowed to do so, so the identity cannot be produced from a branch or a pull request."
+      - id: c
+        text: "The exact tag reference, or a tight pattern for release tags"
+        explanation: "Correct. A protected tag can be created only by people allowed to do so, so the identity cannot be produced from a branch or a pull request."
+      - id: d
+        text: "refs/pull/ with any number"
+        explanation: "Not correct. A protected tag can be created only by people allowed to do so, so the identity cannot be produced from a branch or a pull request."
+    correct_option: c
+    explanation: "Correct. A protected tag can be created only by people allowed to do so, so the identity cannot be produced from a branch or a pull request."
+
+  - id: ats122-030-03-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Recognise an unsafe regular expression"
+    source_readings:
+      - sections/section-030/module-03/course-03-pinning-workflows-and-references.md
+    prompt: "Which pattern for cosign --certificate-identity-regexp is safe for the workflow release.yml of acme/inventory-app on release tags?"
+    options:
+      - id: a
+        text: "release.yml"
+        explanation: "Not correct. It is anchored, escapes the dots and fixes the repository, the file and the form of the tag. The other patterns match identities nobody reviewed."
+      - id: b
+        text: "^https://github.com/.*$"
+        explanation: "Not correct. It is anchored, escapes the dots and fixes the repository, the file and the form of the tag. The other patterns match identities nobody reviewed."
+      - id: c
+        text: "^https://github\\.com/acme/inventory-app/\\.github/workflows/release\\.yml@refs/tags/v[0-9]+\\.[0-9]+\\.[0-9]+$"
+        explanation: "Correct. It is anchored, escapes the dots and fixes the repository, the file and the form of the tag. The other patterns match identities nobody reviewed."
+      - id: d
+        text: "acme"
+        explanation: "Not correct. It is anchored, escapes the dots and fixes the repository, the file and the form of the tag. The other patterns match identities nobody reviewed."
+    correct_option: c
+    explanation: "Correct. It is anchored, escapes the dots and fixes the repository, the file and the form of the tag. The other patterns match identities nobody reviewed."
+
+  - id: ats122-030-03-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "State the four inputs of a verification"
+    source_readings:
+      - sections/section-030/module-03/course-04-clients-for-javascript-and-java.md
+    prompt: "Which four inputs does every Sigstore client need to verify a signature?"
+    options:
+      - id: a
+        text: "A password, a key, a bundle and a token"
+        explanation: "Not correct. Every client needs the bundle, the content or its digest, the trusted root, and the expected identity and issuer."
+      - id: b
+        text: "A bundle, the content, a trusted root, and an expected identity with its issuer"
+        explanation: "Correct. Every client needs the bundle, the content or its digest, the trusted root, and the expected identity and issuer."
+      - id: c
+        text: "A Dockerfile, a tag, a digest and a log"
+        explanation: "Not correct. Every client needs the bundle, the content or its digest, the trusted root, and the expected identity and issuer."
+      - id: d
+        text: "A repository, a branch, a commit and a runner"
+        explanation: "Not correct. Every client needs the bundle, the content or its digest, the trusted root, and the expected identity and issuer."
+    correct_option: b
+    explanation: "Correct. Every client needs the bundle, the content or its digest, the trusted root, and the expected identity and issuer."
+
+  - id: ats122-030-03-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Use two tools to locate a failure"
+    source_readings:
+      - sections/section-030/module-03/course-05-clients-for-rust-and-ruby.md
+    prompt: "sigstore-python and cosign both refuse a file with the same trusted root, identity and issuer. What should you check first?"
+    options:
+      - id: a
+        text: "The policy of sigstore-python only"
+        explanation: "Not correct. Two tools that agree on a refusal point to the bundle or the trusted root. If only one tool refuses, its policy differs."
+      - id: b
+        text: "The bundle and the trusted root"
+        explanation: "Correct. Two tools that agree on a refusal point to the bundle or the trusted root. If only one tool refuses, its policy differs."
+      - id: c
+        text: "The version of Python"
+        explanation: "Not correct. Two tools that agree on a refusal point to the bundle or the trusted root. If only one tool refuses, its policy differs."
+      - id: d
+        text: "The size of the file"
+        explanation: "Not correct. Two tools that agree on a refusal point to the bundle or the trusted root. If only one tool refuses, its policy differs."
+    correct_option: b
+    explanation: "Correct. Two tools that agree on a refusal point to the bundle or the trusted root. If only one tool refuses, its policy differs."

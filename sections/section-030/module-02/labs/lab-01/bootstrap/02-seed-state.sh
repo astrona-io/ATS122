@@ -170,5 +170,6 @@ for file in a-changed b-intruder c-ci d-changed; do
   copy_from_ws py-runner "/tmp/release/$file.tar.gz.sigstore.json" "/work/release-bad/$file.tar.gz.sigstore.json"
 done
 
+MANIFEST_DIR="$(manifest_dir)"
 put_file py-runner "$MANIFEST_DIR/python/check_release.py" /work/check_release.py
 echo "[lab] /work/check_release.py in py-runner accepts one signer, stops at the first failure and always exits 0."

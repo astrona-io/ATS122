@@ -1,0 +1,4 @@
+[
+  {"kind": "github", "repository": "acme/inventory-app", "workflow": "release.yml", "ref": "refs/tags/v1.0.0"},
+  {"kind": "kubernetes", "namespace": "workstation", "serviceaccount": "ci-bot"}
+]

@@ -355,3 +355,72 @@ questions:
         explanation: "Not correct. It reports nothing through the code."
     correct_option: b
     explanation: "Correct. The check must return the failure count."
+
+  - id: ats122-final-q16
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name the identity of a workflow"
+    source_readings:
+      - sections/section-030/module-03/course-01-the-github-actions-certificate.md
+    prompt: "Which value identifies a GitHub Actions workflow in a Fulcio certificate?"
+    options:
+      - id: a
+        text: "The email address of the committer"
+        explanation: "Not correct. The subject alternative name is built from the job workflow reference: the repository, the workflow path and the Git reference."
+      - id: b
+        text: "The workflow file with its Git reference, for example .../.github/workflows/release.yml@refs/tags/v1.0.0"
+        explanation: "Correct. The subject alternative name is built from the job workflow reference: the repository, the workflow path and the Git reference."
+      - id: c
+        text: "The name of the runner"
+        explanation: "Not correct. The subject alternative name is built from the job workflow reference: the repository, the workflow path and the Git reference."
+      - id: d
+        text: "The size of the repository"
+        explanation: "Not correct. The subject alternative name is built from the job workflow reference: the repository, the workflow path and the Git reference."
+    correct_option: b
+    explanation: "Correct. The subject alternative name is built from the job workflow reference: the repository, the workflow path and the Git reference."
+
+  - id: ats122-final-q17
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Combine signers in a policy"
+    source_readings:
+      - sections/section-030/module-03/course-02-writing-a-workflow-policy.md
+    prompt: "A release may be signed by a GitHub workflow or by ci-bot. Which sigstore-python policy accepts a file signed by either?"
+    options:
+      - id: a
+        text: "AllOf of two Identity policies"
+        explanation: "Not correct. AnyOf accepts when one policy accepts. AllOf needs both signers on the same file."
+      - id: b
+        text: "AnyOf of two Identity policies"
+        explanation: "Correct. AnyOf accepts when one policy accepts. AllOf needs both signers on the same file."
+      - id: c
+        text: "UnsafeNoOp"
+        explanation: "Not correct. AnyOf accepts when one policy accepts. AllOf needs both signers on the same file."
+      - id: d
+        text: "A single Identity with the repository name"
+        explanation: "Not correct. AnyOf accepts when one policy accepts. AllOf needs both signers on the same file."
+    correct_option: b
+    explanation: "Correct. AnyOf accepts when one policy accepts. AllOf needs both signers on the same file."
+
+  - id: ats122-final-q18
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Write a safe identity pattern"
+    source_readings:
+      - sections/section-030/module-03/course-03-pinning-workflows-and-references.md
+    prompt: "Why must a regular expression for a certificate identity start with ^ and end with $?"
+    options:
+      - id: a
+        text: "Because Fulcio requires it"
+        explanation: "Not correct. An unanchored pattern such as ci-bot matches any identity that contains those letters."
+      - id: b
+        text: "Because without anchors it matches inside a longer identity that nobody reviewed"
+        explanation: "Correct. An unanchored pattern such as ci-bot matches any identity that contains those letters."
+      - id: c
+        text: "Because cosign ignores patterns without them"
+        explanation: "Not correct. An unanchored pattern such as ci-bot matches any identity that contains those letters."
+      - id: d
+        text: "Because the dots would be escaped otherwise"
+        explanation: "Not correct. An unanchored pattern such as ci-bot matches any identity that contains those letters."
+    correct_option: b
+    explanation: "Correct. An unanchored pattern such as ci-bot matches any identity that contains those letters."

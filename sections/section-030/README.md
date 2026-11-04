@@ -16,7 +16,8 @@ This section uses sigstore-python against the private Sigstore stack in your clu
 - Verifying a signature made by a GitHub Actions workflow with `sigstore verify github`.
 - Policies for more than one signer: `AnyOf`, `AllOf` and `UnsafeNoOp`.
 - Reading a bundle with `jq` and `openssl`, exit codes in automation, and the lifetime of tokens and certificates.
-- Which other Sigstore language clients exist and what to check before you use one.
+- What the certificate of a GitHub Actions workflow holds, and how to write and pin a workflow policy.
+- How verification looks in sigstore-js, sigstore-java, sigstore-rs and sigstore-ruby, and what to check before you use one.
 
 ## The learning path
 
@@ -35,6 +36,15 @@ The second module, Release Checks In Python, has its own playground with two rel
 3. Errors And Exit Codes In Automation, followed by the lab **Make The Release Check Accept Two Signers**
 4. Token And Certificate Lifetime
 5. Summary
+
+The third module, GitHub Workflow Policies And Other Clients, has its own playground with a policy script and two release folders.
+
+1. The GitHub Actions Certificate
+2. Writing A Workflow Policy, followed by the lab **Pin A GitHub Workflow In The Release Policy**
+3. Pinning Workflows And References
+4. Clients For JavaScript And Java
+5. Clients For Rust And Ruby
+6. Summary
 
 ## Section capstone: Repair A Python Release Signing Step
 

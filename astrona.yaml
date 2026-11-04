@@ -290,8 +290,9 @@ modules:
     description: >
       sigstore-python from the command line and from code: identity tokens,
       the client trust configuration for a private instance, signing to a
-      bundle, verifying with an identity policy, and the other Sigstore
-      language clients.
+      bundle, verifying with an identity policy, release checks for several
+      signers, policies for GitHub Actions workflows and Git references, and
+      the other Sigstore language clients.
 
     content:
       - type: reading
@@ -373,6 +374,52 @@ modules:
       - type: reading
         title: "Summary"
         path: sections/section-030/module-02/course-05-summary.md
+
+      - type: reading
+        title: "GitHub Workflow Policies And Other Clients"
+        path: sections/section-030/module-03/course.md
+      - type: reading
+        title: "The GitHub Actions Certificate"
+        path: sections/section-030/module-03/course-01-the-github-actions-certificate.md
+      - type: reading
+        title: "Writing A Workflow Policy"
+        path: sections/section-030/module-03/course-02-writing-a-workflow-policy.md
+      - type: reading
+        title: Question
+        path: sections/section-030/module-03/labs/lab-01/question.md
+      - type: lab
+        title: "Pin A GitHub Workflow In The Release Policy Lab"
+        path: sections/section-030/module-03/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: github-workflow-policy
+        task_kind: troubleshooting
+        tags: [sigstore-python, github-actions, workflow-identity, certificate-identity, anyof, policy]
+        learning_goals:
+          - Build the identity of a GitHub Actions workflow from a repository, a workflow file and a Git reference
+          - Use the GitHub Actions issuer in the policy
+          - Combine several signers with AnyOf so a good release is accepted and a bad one is refused
+        resources:
+          - name: "sigstore-python"
+            url: https://github.com/sigstore/sigstore-python
+          - name: "OIDC usage in Fulcio"
+            url: https://docs.sigstore.dev/certificate_authority/oidc-in-fulcio/
+      - type: reading
+        title: "Pinning Workflows And References"
+        path: sections/section-030/module-03/course-03-pinning-workflows-and-references.md
+      - type: reading
+        title: "Clients For JavaScript And Java"
+        path: sections/section-030/module-03/course-04-clients-for-javascript-and-java.md
+      - type: reading
+        title: "Clients For Rust And Ruby"
+        path: sections/section-030/module-03/course-05-clients-for-rust-and-ruby.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-030/module-03/course-06-summary.md
+      - type: quiz
+        title: "Knowledge Check: GitHub Workflow Policies And Other Clients"
+        path: sections/section-030/module-03/quiz.yaml
+        pass_score: 70
 
       - type: reading
         title: Question

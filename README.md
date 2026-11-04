@@ -29,7 +29,7 @@ section contains:
 | --- | --- | --- | --- | --- |
 | [010](sections/section-010) | Signing Git Commits With Gitsign | 2 | 2 + capstone | gitsign |
 | [020](sections/section-020) | Verifying Signatures From Go | 2 | 2 + capstone | sigstore-go |
-| [030](sections/section-030) | Signing And Verifying From Python | 2 | 2 + capstone | sigstore-python |
+| [030](sections/section-030) | Signing And Verifying From Python | 3 | 3 + capstone | sigstore-python |
 
 ---
 
@@ -43,6 +43,7 @@ section contains:
 | 020-02 | [Signer Policies And Verification Results](sections/section-020/module-02/course.md) | 4 | [lab-01](sections/section-020/module-02/labs/lab-01) |
 | 030-01 | [Sign And Verify From Python](sections/section-030/module-01/course.md) | 4 | [lab-01](sections/section-030/module-01/labs/lab-01) |
 | 030-02 | [Release Checks In Python](sections/section-030/module-02/course.md) | 4 | [lab-01](sections/section-030/module-02/labs/lab-01) |
+| 030-03 | [GitHub Workflow Policies And Other Clients](sections/section-030/module-03/course.md) | 5 | [lab-01](sections/section-030/module-03/labs/lab-01) |
 
 ---
 

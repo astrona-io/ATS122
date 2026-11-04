@@ -1,0 +1,65 @@
+# Pin A GitHub Workflow In The Release Policy
+# Astrona graded lab. Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-122-lab-030-03"
+  docs:
+    guide: "solution.md"
+    solution: "solution.md"
+    question: "question.md"
+    examQuestion: "question.md"
+    prerequisites: "prerequisites.md"
+bootstrap:
+  init:
+    - name: "install-sigstore"
+      description: "Installs Helm 3.22.1, the private Sigstore stack (scaffold chart 0.6.117), the workstation pod and its trust material, py-runner"
+      type: "file"
+      source: "bootstrap/01-install-sigstore.sh"
+    - name: "ats-122-lab-030-03-setup"
+      description: "Creates the starting state the task works from"
+      type: "file"
+      source: "bootstrap/02-seed-state.sh"
+  manifests:
+    - name: "lab-start"
+      description: "The workstation pod and its service accounts (namespace workstation)."
+      type: "file"
+      source: "manifests/lab-start.yaml"
+testing:
+  init:
+    - name: "wait-for-sigstore"
+      description: "Waits until Fulcio, Rekor and the trust material are ready"
+      type: "file"
+      source: "testing/wait-for-sigstore.sh"
+    - name: "reference-solution"
+      description: "The remediation a correct learner performs; used by `astrona test`"
+      type: "file"
+      source: "solution/apply.sh"
+validation:
+  scripts:
+    - name: "validate-github-identity"
+      description: "The policy line for the GitHub signer holds the full workflow reference"
+      type: "file"
+      source: "validation/validate-github-identity.sh"
+    - name: "validate-github-issuer"
+      description: "The policy line for the GitHub signer holds the GitHub Actions issuer"
+      type: "file"
+      source: "validation/validate-github-issuer.sh"
+    - name: "validate-ref-pinned"
+      description: "A different ref in the signers file changes the identity"
+      type: "file"
+      source: "validation/validate-ref-pinned.sh"
+    - name: "validate-release-accepted"
+      description: "A release signed by ci-bot is accepted when a GitHub signer is also listed"
+      type: "file"
+      source: "validation/validate-release-accepted.sh"
+    - name: "validate-bad-release-refused"
+      description: "A release with a changed file and an intruder file is refused and both are named"
+      type: "file"
+      source: "validation/validate-bad-release-refused.sh"
+teardown:
+  keepCluster: false
+runtime:
+  kind:
+    preloadImages:
+      - alpine:3.22
+      - python:3.13.17-slim
