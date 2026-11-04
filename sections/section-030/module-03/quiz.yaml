@@ -4,7 +4,7 @@ kind: question_bank
 id: ats122-030-03
 course_id: ATS122
 exam_code: SIGSTORE
-status: draft
+status: alpha
 provenance: Original practice material written for this course; not official exam questions.
 scope:
   type: module

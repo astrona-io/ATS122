@@ -13,7 +13,7 @@
 training:
   id: ATS122
   title: "Sigstore: Developer Tooling With Gitsign & Language Clients"
-  maturity: draft
+  maturity: alpha
   description: >
     Training material covering the Developer Tooling domain of the Sigstore
     training path: keyless Git commit signing with gitsign, configuring Git
