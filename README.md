@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://astrona.io/courses/sigstore">
+    <img src="https://astrona.io/courses/sigstore/domains/ATS122.svg" alt="ATS122: Developer Tooling: Gitsign & Language Clients, part of the Sigstore course on Astrona" width="100%">
+  </a>
+</p>
+
 # ATS122 — Developer Tooling: Gitsign & Language Clients (Sigstore)
 
 Course material for the **Developer Tooling: Gitsign & Language Clients**
